@@ -1,12 +1,13 @@
-import world, tile, bind, controller
+import world, tile, controller
 from tkinter import *
 from tkinter import font
 from tkinter import scrolledtext
 import time
 
 # Propositional logic agent 
-import gamestate, agent
-from menu import Menu
+import agent
+from gamestate import Node
+from constants import *
 DELAY = 10
 
 class Board:
@@ -60,11 +61,8 @@ class Board:
         self.SCORE = PhotoImage(file='../Assets/score_icon.png')
 
         # Game state
-        self.gameState = bind.GameState.NOT_RUNNING
+        self.gameState = NOT_RUNNING
 
-        # Agent
-        # self.agent = controller.ManualAgent()
-        # self.root.bind("<Key>", self.updateBoard) # Manual agent
         self.agent = None # PL agent
         self.agentPos = None
 
@@ -137,7 +135,7 @@ class Board:
             self.terrains.append(terrains_line)
 
         # Init PL agent
-        starting_node = gamestate.Node(self.agentPos[0], self.agentPos[1], self.world)
+        starting_node = Node(self.agentPos[0], self.agentPos[1], self.world)
         self.agent = agent.Level_solver(self.world, starting_node)
 
         self.canvas.create_rectangle(0, 64 * self.world.height, 64 * self.world.width, 64 * self.world.height + 64, fill='#85888a')
@@ -170,16 +168,16 @@ class Board:
         fixed_x = 0
         fixed_y = 0
 
-        if action == bind.Action.LEFT:
+        if action == Action.LEFT:
             nextPos = (self.agentPos[0], self.agentPos[1] - 1)
             fixed_x = -64
-        elif action == bind.Action.RIGHT:
+        elif action == Action.RIGHT:
             nextPos = (self.agentPos[0], self.agentPos[1] + 1)
             fixed_x = 64
-        elif action == bind.Action.UP:
+        elif action == Action.UP:
             nextPos = (self.agentPos[0] - 1, self.agentPos[1])
             fixed_y = -64
-        elif action == bind.Action.DOWN:
+        elif action == Action.DOWN:
             nextPos = (self.agentPos[0] + 1, self.agentPos[1])
             fixed_y = 64
                 
@@ -215,16 +213,16 @@ class Board:
     def shootForward(self, direction): # direction: current state
         arrow = None
         arrow_loc = None
-        if self.agent.currentState == bind.Action.LEFT:
+        if self.agent.currentState == Action.LEFT:
             arrow_loc = (self.agentPos[0], self.agentPos[1] - 1)
             arrow = self.canvas.create_image(64 * arrow_loc[1], 64 * arrow_loc[0], image=self.ARROW_LEFT, anchor=NW)
-        elif self.agent.currentState == bind.Action.RIGHT:
+        elif self.agent.currentState == Action.RIGHT:
             arrow_loc = (self.agentPos[0], self.agentPos[1] + 1)
             arrow = self.canvas.create_image(64 * arrow_loc[1], 64 * arrow_loc[0], image=self.ARROW_RIGHT, anchor=NW)
-        elif self.agent.currentState == bind.Action.UP:
+        elif self.agent.currentState == Action.UP:
             arrow_loc = (self.agentPos[0] - 1, self.agentPos[1])
             arrow = self.canvas.create_image(64 * arrow_loc[1], 64 * arrow_loc[0], image=self.ARROW_UP, anchor=NW)
-        elif self.agent.currentState == bind.Action.DOWN:
+        elif self.agent.currentState == Action.DOWN:
             arrow_loc = (self.agentPos[0] + 1, self.agentPos[1])
             arrow = self.canvas.create_image(64 * arrow_loc[1], 64 * arrow_loc[0], image=self.ARROW_DOWN, anchor=NW)
 
@@ -291,7 +289,7 @@ class Board:
 
 
     def endGame(self, reason):
-        self.gameState = bind.GameState.NOT_RUNNING
+        self.gameState = NOT_RUNNING
         for i in range(self.world.height):
             for j in range(self.world.width):
                 if self.terrains[i][j]:
@@ -309,43 +307,6 @@ class Board:
             if self.world.listTiles[self.agentPos[0]][self.agentPos[1]].getBreeze():
                 self.actionArea.insert(END, 'SENSE: Breeze\n')
 
-    ############################# INPUT AND UPDATE GAME #############################
-
-    def updateBoard(self, event):
-        key = event.char
-        action = self.agent.getAction(key)
-
-        if action == bind.Action.DOWN:
-            if action == self.agent.currentState:
-                self.moveForward(action)
-            else:
-                self.canvas.itemconfigure(self.player, image=self.PLAYER_DOWN)
-                self.agent.currentState = bind.Action.DOWN
-        elif action == bind.Action.UP:
-            if action == self.agent.currentState:
-                self.moveForward(action)
-            else:
-                self.canvas.itemconfigure(self.player, image=self.PLAYER_UP)
-                self.agent.currentState = bind.Action.UP
-        elif action == bind.Action.LEFT:
-            if action == self.agent.currentState:
-                self.moveForward(action)
-            else:
-                self.canvas.itemconfigure(self.player, image=self.PLAYER_LEFT)
-                self.agent.currentState = bind.Action.LEFT
-        elif action == bind.Action.RIGHT:
-            if action == self.agent.currentState:
-                self.moveForward(action)
-            else:
-                self.canvas.itemconfigure(self.player, image=self.PLAYER_RIGHT)
-                self.agent.currentState = bind.Action.RIGHT
-        elif action == bind.Action.SHOOT:
-            self.shootForward(self.agent.currentState)
-        elif action == bind.Action.GRAB:
-            self.grabGold()
-        elif action == bind.Action.CLIMB:
-            if self.agentPos == self.world.doorPos:
-                self.endGame("Climb")
 
     def changeRunMode(self, key):
         self.runMode = key        
@@ -358,10 +319,10 @@ class Board:
 
         # PL agent's
     def mainloop(self):
-        self.gameState = bind.GameState.RUNNING
+        self.gameState = RUNNING
 
         if self.runMode == 1:
-            while self.gameState == bind.GameState.RUNNING:
+            while self.gameState == RUNNING:
                 self.senseObject()
                 self.actionArea.see(END)
                 action = self.agent.getAction()
@@ -383,45 +344,45 @@ class Board:
                     self.KBArea.see(END)
 
 
-                if action == bind.Action.DOWN:
+                if action == Action.DOWN:
                     if action == self.agent.currentState:
                         self.actionArea.insert(END, 'ACTION: Move forward\n')
                         self.moveForward(action)
                     else:
                         self.canvas.itemconfigure(self.player, image=self.PLAYER_DOWN)
                         self.actionArea.insert(END, 'ACTION: Face down\n')
-                        self.agent.currentState = bind.Action.DOWN
-                elif action == bind.Action.UP:
+                        self.agent.currentState = Action.DOWN
+                elif action == Action.UP:
                     if action == self.agent.currentState:
                         self.actionArea.insert(END, 'ACTION: Move forward\n')
                         self.moveForward(action)
                     else:
                         self.canvas.itemconfigure(self.player, image=self.PLAYER_UP)
                         self.actionArea.insert(END, 'ACTION: Face up\n')
-                        self.agent.currentState = bind.Action.UP
-                elif action == bind.Action.LEFT:
+                        self.agent.currentState = Action.UP
+                elif action == Action.LEFT:
                     if action == self.agent.currentState:
                         self.actionArea.insert(END, 'ACTION: Move forward\n')
                         self.moveForward(action)
                     else:
                         self.canvas.itemconfigure(self.player, image=self.PLAYER_LEFT)
                         self.actionArea.insert(END, 'ACTION: Face left\n')
-                        self.agent.currentState = bind.Action.LEFT
-                elif action == bind.Action.RIGHT:
+                        self.agent.currentState = Action.LEFT
+                elif action == Action.RIGHT:
                     if action == self.agent.currentState:
                         self.actionArea.insert(END, 'ACTION: Move forward\n')
                         self.moveForward(action)
                     else:
                         self.canvas.itemconfigure(self.player, image=self.PLAYER_RIGHT)
                         self.actionArea.insert(END, 'ACTION: Face right\n')
-                        self.agent.currentState = bind.Action.RIGHT
-                elif action == bind.Action.SHOOT:
+                        self.agent.currentState = Action.RIGHT
+                elif action == Action.SHOOT:
                     self.actionArea.insert(END, 'ACTION: Shoot arrow\n')
                     self.shootForward(self.agent.currentState)
-                elif action == bind.Action.GRAB:
+                elif action == Action.GRAB:
                     self.actionArea.insert(END, 'ACTION: Grab gold\n')
                     self.grabGold()
-                elif action == bind.Action.CLIMB:
+                elif action == Action.CLIMB:
                     self.actionArea.insert(END, 'ACTION: Climb out\n')
                     self.actionArea.see(END)
                     if self.agentPos == self.world.doorPos:
@@ -437,7 +398,7 @@ class Board:
             self.root.mainloop()
 
         elif self.runMode == 0:
-            if self.gameState == bind.GameState.RUNNING:
+            if self.gameState == RUNNING:
                 self.senseObject()
                 self.actionArea.see(END)
 
@@ -460,45 +421,45 @@ class Board:
                     self.KBArea.see(END)
 
 
-                if action == bind.Action.DOWN:
+                if action == Action.DOWN:
                     if action == self.agent.currentState:
                         self.actionArea.insert(END, 'ACTION: Move forward\n')
                         self.moveForward(action)
                     else:
                         self.canvas.itemconfigure(self.player, image=self.PLAYER_DOWN)
                         self.actionArea.insert(END, 'ACTION: Face down\n')
-                        self.agent.currentState = bind.Action.DOWN
-                elif action == bind.Action.UP:
+                        self.agent.currentState = Action.DOWN
+                elif action == Action.UP:
                     if action == self.agent.currentState:
                         self.actionArea.insert(END, 'ACTION: Move forward\n')
                         self.moveForward(action)
                     else:
                         self.canvas.itemconfigure(self.player, image=self.PLAYER_UP)
                         self.actionArea.insert(END, 'ACTION: Face up\n')
-                        self.agent.currentState = bind.Action.UP
-                elif action == bind.Action.LEFT:
+                        self.agent.currentState = Action.UP
+                elif action == Action.LEFT:
                     if action == self.agent.currentState:
                         self.actionArea.insert(END, 'ACTION: Move forward\n')
                         self.moveForward(action)
                     else:
                         self.canvas.itemconfigure(self.player, image=self.PLAYER_LEFT)
                         self.actionArea.insert(END, 'ACTION: Face left\n')
-                        self.agent.currentState = bind.Action.LEFT
-                elif action == bind.Action.RIGHT:
+                        self.agent.currentState = Action.LEFT
+                elif action == Action.RIGHT:
                     if action == self.agent.currentState:
                         self.actionArea.insert(END, 'ACTION: Move forward\n')
                         self.moveForward(action)
                     else:
                         self.canvas.itemconfigure(self.player, image=self.PLAYER_RIGHT)
                         self.actionArea.insert(END, 'ACTION: Face right\n')
-                        self.agent.currentState = bind.Action.RIGHT
-                elif action == bind.Action.SHOOT:
+                        self.agent.currentState = Action.RIGHT
+                elif action == Action.SHOOT:
                     self.actionArea.insert(END, 'ACTION: Shoot arrow\n')
                     self.shootForward(self.agent.currentState)
-                elif action == bind.Action.GRAB:
+                elif action == Action.GRAB:
                     self.actionArea.insert(END, 'ACTION: Grab gold\n')
                     self.grabGold()
-                elif action == bind.Action.CLIMB:
+                elif action == Action.CLIMB:
                     self.actionArea.insert(END, 'ACTION: Climb out\n')
                     self.actionArea.see(END)
                     if self.agentPos == self.world.doorPos:

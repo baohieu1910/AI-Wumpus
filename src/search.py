@@ -1,5 +1,5 @@
 import heapq
-from bind import *
+from constants import  *
 
 class Search:
     def __init__(self, graph, start, goals, visited_states, current_direction):
@@ -12,7 +12,7 @@ class Search:
     def unicost(self):
         frontier = []
         expansion = [[0, self.current_direction, self.start, [self.start]]]
-        
+
         if self.start in self.goals:
             return expansion[-1][3]
 
@@ -67,7 +67,10 @@ class Search:
         return expansion[-1][3][0:]
 
 
+
+
     def movement_cost(self, current, next):
+        print(current)
         if isinstance(current,enum.Enum):
             if int(current.value) == int(next.value):
                 return 1

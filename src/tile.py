@@ -55,26 +55,6 @@ class Tile:
 
     def removeGold(self):
         self.__isGold = False
-    
+
     def removePlayer(self):
         self.__isPlayer = False
-
-    ################################# DEBUGGING #################################
-    
-    def printTile(self):
-        string = ''
-        if self.__isPit:
-            string += 'P'
-        if self.__isBreeze:
-            string += 'B'
-        if self.__isWumpus:
-            string += 'W'
-        if self.__numStench != 0:
-            for i in range(self.__numStench):
-                string += 'S'
-        if self.__isGold:
-            string += 'G'
-        if self.__isPlayer:
-            string += 'A'
-
-        return string

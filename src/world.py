@@ -1,13 +1,14 @@
 import tile
 from random import randrange
 
+
 class WumpusWorld:
     def __init__(self):
         """Initialize an empty board"""
         self.height = 0
         self.width = 0
         self.__numGold = 0
-        self.__numWumpus = 0    
+        self.__numWumpus = 0
         self.listTiles = []
         self.doorPos = None
 
@@ -21,7 +22,7 @@ class WumpusWorld:
         if j - 1 >= 0:
             adj.append((i, j - 1))
         if j + 1 <= self.width - 1:
-            adj.append((i, j + 1))  
+            adj.append((i, j + 1))
 
         return adj
 
@@ -56,21 +57,18 @@ class WumpusWorld:
                             for a in adj:
                                 (self.listTiles[a[0]][a[1]]).setBreeze()
                         if 'W' in tiles[i][j]:
-                            (self.listTiles[i][j]).setWumpus()    
+                            (self.listTiles[i][j]).setWumpus()
                             self.__numWumpus += 1
                             adj = self.get_Adjacents(i, j)
                             for a in adj:
                                 (self.listTiles[a[0]][a[1]]).setStench()
                         if 'A' in tiles[i][j]:
                             (self.listTiles[i][j]).setPlayer()
-                            self.doorPos =  (i, j)
+                            self.doorPos = (i, j)
         except IOError:
             return None
 
-    def grabGold(self, i , j):
-        self.__numGold -= 1
-        self.listTiles[i][j].removeGold()
-    
+
     def killWumpus(self, i, j):
         self.__numWumpus -= 1
         self.listTiles[i][j].removeWumpus()
@@ -89,16 +87,3 @@ class WumpusWorld:
     def leftWumpus(self):
         return False if self.__numWumpus == 0 else True
 
-
-    ################################# DEBUGGING #################################
-
-    def printWorld(self):
-        string = []
-        for i in range(self.height):
-            line = []
-            for j in range(self.width):
-                line.append(self.listTiles[i][j].printTile())
-            string.append(line)
-        
-        for i in string:
-            print(i)

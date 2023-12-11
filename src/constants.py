@@ -1,11 +1,10 @@
 import pygame
-
+import enum
 
 # Window
 SCREEN_WIDTH = 970
 SCREEN_HEIGHT = 710
 CAPTION = 'Wumpus World'
-
 
 MAP_STATE_LIST = ['MAP_1', 'MAP_2', 'MAP_3', 'MAP_4', 'MAP_5', ]
 
@@ -17,7 +16,6 @@ MAP_LIST = ['../Input/map_1.txt',
             '../Input/map_5.txt']
 MAP_NUM = len(MAP_LIST)
 
-
 # Fonts
 FONT_MRSMONSTER = '../Assets/Fonts/mrsmonster.ttf'
 
@@ -28,7 +26,18 @@ LIGHT_GREY = (170, 170, 170)
 DARK_GREY = (75, 75, 75)
 RED = (255, 0, 0)
 
+class Action(enum.Enum):
+    LEFT = 1
+    UP = 2
+    DOWN = 3
+    RIGHT = 4
+    SHOOT = 5
+    GRAB = 6
+    CLIMB = 7
+
 # state
+RUNNING = 'running'
+NOT_RUNNING = 'not_running'
 SELECT_MAP = 'select_map'
 HOME = 'home'
 ABOUT_US = 'about_us'

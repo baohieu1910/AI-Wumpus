@@ -1,29 +1,29 @@
-import bind
+from constants import *
 
 class ManualAgent():
     def __init__(self):
-        self.currentState = bind.Action.RIGHT
+        self.currentState = Action.RIGHT
 
     def getAction(self, key):
         if key == 'w':
-            return bind.Action.UP
+            return Action.UP
             
         if key == 'a':
-            return bind.Action.LEFT
+            return Action.LEFT
 
         if key == 's':
-            return bind.Action.DOWN
+            return Action.DOWN
             
         if key == 'd':
-            return bind.Action.RIGHT
+            return Action.RIGHT
             
         if key == 'f':
-            return bind.Action.SHOOT
+            return Action.SHOOT
             
         if key == 'g':
-            return bind.Action.GRAB
+            return Action.GRAB
         
         if key == 'c':
-            return bind.Action.CLIMB
+            return Action.CLIMB
         
         return None
