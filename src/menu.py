@@ -1,3 +1,5 @@
+import pygame
+
 from constants import *
 import sys
 
@@ -119,5 +121,6 @@ class Menu():
                 self.home_event()
             else:
                 break
+        pygame.quit()
         return self.state
 
