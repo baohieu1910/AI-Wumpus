@@ -11,5 +11,5 @@ if __name__ == "__main__":
     wumpus_world.read_Map(MAP_LIST[map - 1])
     board = graphics.Board(wumpus_world)
     board.createWorld()
-    board.mainloop()
+    board.run()
 

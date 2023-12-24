@@ -39,63 +39,63 @@ class Menu():
 
             if self.state == HOME:
                 if 235 <= self.mouse[0] <= 735 and 250 <= self.mouse[1] <= 330:
-                    self.draw_button(self.screen, PLAY_POS, DARK_GREY, WHITE, "PLAY")
+                    self.draw_button(self.screen, PLAY_POS, BRONZE, WHITE, "PLAY")
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         self.state = SELECT_MAP  # Chuyển sang trạng thái chọn map
                 else:
-                    self.draw_button(self.screen, PLAY_POS, LIGHT_GREY, BLACK, "PLAY")
+                    self.draw_button(self.screen, PLAY_POS, BROWN, BLACK, "PLAY")
 
                 if 235 <= self.mouse[0] <= 735 and 350 <= self.mouse[1] <= 430:
-                    self.draw_button(self.screen, ABOUT_US, DARK_GREY, WHITE, "ABOUT US")
+                    self.draw_button(self.screen, ABOUT_US, BRONZE, WHITE, "ABOUT US")
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         self.state = ABOUT_US
                 else:
-                    self.draw_button(self.screen, ABOUT_US, LIGHT_GREY, BLACK, "ABOUT US")
+                    self.draw_button(self.screen, ABOUT_US, BROWN, BLACK, "ABOUT US")
 
                 if 235 <= self.mouse[0] <= 735 and 450 <= self.mouse[1] <= 530:
-                    self.draw_button(self.screen, EXIT_POS, DARK_GREY, WHITE, "EXIT")
+                    self.draw_button(self.screen, EXIT_POS, BRONZE, WHITE, "EXIT")
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         pygame.quit()
                         sys.exit()
                 else:
-                    self.draw_button(self.screen, EXIT_POS, LIGHT_GREY, BLACK, "EXIT")
+                    self.draw_button(self.screen, EXIT_POS, BROWN, BLACK, "EXIT")
             elif self.state == SELECT_MAP:
                 if 235 <= self.mouse[0] <= 735 and 200 <= self.mouse[1] <= 250:
-                    self.draw_button(self.screen, LEVEL_1_POS, DARK_GREY, WHITE, "MAP 1")
+                    self.draw_button(self.screen, LEVEL_1_POS, BRONZE, WHITE, "MAP 1")
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         self.state = MAP_STATE_LIST[0]
                 else:
-                    self.draw_button(self.screen, LEVEL_1_POS, LIGHT_GREY, BLACK, "MAP 1")
+                    self.draw_button(self.screen, LEVEL_1_POS, BROWN, BLACK, "MAP 1")
                 if 235 <= self.mouse[0] <= 735 and 280 <= self.mouse[1] <= 330:
-                    self.draw_button(self.screen, LEVEL_2_POS, DARK_GREY, WHITE, "MAP 2")
+                    self.draw_button(self.screen, LEVEL_2_POS, BRONZE, WHITE, "MAP 2")
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         self.state = MAP_STATE_LIST[1]
                 else:
-                    self.draw_button(self.screen, LEVEL_2_POS, LIGHT_GREY, BLACK, "MAP 2")
+                    self.draw_button(self.screen, LEVEL_2_POS, BROWN, BLACK, "MAP 2")
                 if 235 <= self.mouse[0] <= 735 and 360 <= self.mouse[1] <= 410:
-                    self.draw_button(self.screen, LEVEL_3_POS, DARK_GREY, WHITE, "MAP 3")
+                    self.draw_button(self.screen, LEVEL_3_POS, BRONZE, WHITE, "MAP 3")
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         self.state = MAP_STATE_LIST[2]
                 else:
-                    self.draw_button(self.screen, LEVEL_3_POS, LIGHT_GREY, BLACK, "MAP 3")
+                    self.draw_button(self.screen, LEVEL_3_POS, BROWN, BLACK, "MAP 3")
                 if 235 <= self.mouse[0] <= 735 and 440 <= self.mouse[1] <= 490:
-                    self.draw_button(self.screen, LEVEL_4_POS, DARK_GREY, WHITE, "MAP 4")
+                    self.draw_button(self.screen, LEVEL_4_POS, BRONZE, WHITE, "MAP 4")
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         self.state = MAP_STATE_LIST[3]
                 else:
-                    self.draw_button(self.screen, LEVEL_4_POS, LIGHT_GREY, BLACK, "MAP 4")
+                    self.draw_button(self.screen, LEVEL_4_POS, BROWN, BLACK, "MAP 4")
                 if 235 <= self.mouse[0] <= 735 and 520 <= self.mouse[1] <= 570:
-                    self.draw_button(self.screen, LEVEL_5_POS, DARK_GREY, WHITE, "MAP 5")
+                    self.draw_button(self.screen, LEVEL_5_POS, BRONZE, WHITE, "MAP 5")
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         self.state = MAP_STATE_LIST[4]
                 else:
-                    self.draw_button(self.screen, LEVEL_5_POS, LIGHT_GREY, BLACK, "MAP 5")
+                    self.draw_button(self.screen, LEVEL_5_POS, BROWN, BLACK, "MAP 5")
                 if 235 <= self.mouse[0] <= 735 and 600 <= self.mouse[1] <= 650:
-                    self.draw_button(self.screen, BACK_POS, DARK_GREY, WHITE, "BACK")
+                    self.draw_button(self.screen, BACK_POS, BRONZE, WHITE, "BACK")
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         self.state = HOME
                 else:
-                    self.draw_button(self.screen, BACK_POS, LIGHT_GREY, BLACK, "BACK")
+                    self.draw_button(self.screen, BACK_POS, BROWN, BLACK, "BACK")
 
             elif self.state == ABOUT_US:
                 self.screen.fill(WHITE)
@@ -107,11 +107,11 @@ class Menu():
                 self.draw_info('21120451 - Le Bao Hieu', BLACK, MEMBER_4_POS)
                 self.draw_info('21120539 - Tran Minh Quang', BLACK, MEMBER_5_POS)
                 if 235 <= self.mouse[0] <= 735 and 470 <= self.mouse[1] <= 520:
-                    self.draw_button(self.screen, MEMBER_BACK_POS, DARK_GREY, WHITE, "BACK")
+                    self.draw_button(self.screen, MEMBER_BACK_POS, BRONZE, WHITE, "BACK")
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         self.state = HOME
                 else:
-                    self.draw_button(self.screen, MEMBER_BACK_POS, LIGHT_GREY, BLACK, "BACK")
+                    self.draw_button(self.screen, MEMBER_BACK_POS, BROWN, BLACK, "BACK")
 
             pygame.display.update()
     def run(self):

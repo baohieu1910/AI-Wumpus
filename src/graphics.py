@@ -4,10 +4,10 @@ from tkinter import font
 from tkinter import scrolledtext
 import time
 
-# Propositional logic agent 
 import agent
-from gamestate import Node
+from WumpusNode import WumpusNode
 from constants import *
+from AgentBrain import AgentBrain
 DELAY = 10
 
 class Board:
@@ -39,26 +39,25 @@ class Board:
         self.terrains = []
         self.player = None
         self.display_score = None
-
         self.scoreFont = font.Font(family='KacstBook', size=22)
 
         # Load images
-        self.DOOR = PhotoImage(file='../Assets/door.png')
-        self.TILE = PhotoImage(file='../Assets/floor.png')
-        self.GOLD_TILE = PhotoImage(file='../Assets/floor_gold.png')
-        self.WUMPUS = PhotoImage(file='../Assets/wumpus.png')
-        self.GOLD = PhotoImage(file='../Assets/gold.png')
-        self.PIT = PhotoImage(file='../Assets/pit.png')
-        self.TERRAIN = PhotoImage(file='../Assets/terrain.png')
-        self.PLAYER_DOWN = PhotoImage(file='../Assets/agent_down.png')
-        self.PLAYER_UP = PhotoImage(file='../Assets/agent_up.png')
-        self.PLAYER_LEFT = PhotoImage(file='../Assets/agent_left.png')
-        self.PLAYER_RIGHT = PhotoImage(file='../Assets/agent_right.png')
-        self.ARROW_DOWN = PhotoImage(file='../Assets/arrow_down.png')
-        self.ARROW_UP = PhotoImage(file='../Assets/arrow_up.png')
-        self.ARROW_LEFT = PhotoImage(file='../Assets/arrow_left.png')
-        self.ARROW_RIGHT = PhotoImage(file='../Assets/arrow_right.png')
-        self.SCORE = PhotoImage(file='../Assets/score_icon.png')
+        self.DOOR = PhotoImage(file=DOOR)
+        self.TILE = PhotoImage(file=TILE)
+        self.GOLD_TILE = PhotoImage(file=GOLD_TILE)
+        self.WUMPUS = PhotoImage(file=WUMPUS)
+        self.GOLD = PhotoImage(file=GOLD)
+        self.PIT = PhotoImage(file=PIT)
+        self.TERRAIN = PhotoImage(file=TERRAIN)
+        self.PLAYER_DOWN = PhotoImage(file=PLAYER_DOWN)
+        self.PLAYER_UP = PhotoImage(file=PLAYER_UP)
+        self.PLAYER_LEFT = PhotoImage(file=PLAYER_LEFT)
+        self.PLAYER_RIGHT = PhotoImage(file=PLAYER_RIGHT)
+        self.ARROW_DOWN = PhotoImage(file=ARROW_DOWN)
+        self.ARROW_UP = PhotoImage(file=ARROW_UP)
+        self.ARROW_LEFT = PhotoImage(file=ARROW_LEFT)
+        self.ARROW_RIGHT = PhotoImage(file=ARROW_RIGHT)
+        self.SCORE = PhotoImage(file=SCORE)
 
         # Game state
         self.gameState = NOT_RUNNING
@@ -135,8 +134,8 @@ class Board:
             self.terrains.append(terrains_line)
 
         # Init PL agent
-        starting_node = Node(self.agentPos[0], self.agentPos[1], self.world)
-        self.agent = agent.Level_solver(self.world, starting_node)
+        starting_node = WumpusNode(self.agentPos[0], self.agentPos[1], self.world)
+        self.agent = AgentBrain(self.world, starting_node)
 
         self.canvas.create_rectangle(0, 64 * self.world.height, 64 * self.world.width, 64 * self.world.height + 64, fill='#85888a')
         self.canvas.create_image(64, 64 * self.world.height + 16, image=self.SCORE, anchor=NW)
@@ -310,15 +309,9 @@ class Board:
 
     def changeRunMode(self, key):
         self.runMode = key        
-        self.mainloop()
-        
-    ############################# MAIN LOOP #############################
-        # Manual agent's
-    # def mainloop(self):
-    #     self.root.mainloop()
+        self.run()
 
-        # PL agent's
-    def mainloop(self):
+    def run(self):
         self.gameState = RUNNING
 
         if self.runMode == 1:
@@ -328,9 +321,9 @@ class Board:
                 action = self.agent.getAction()
 
                 # Update KB
-                    # CLEAR KB
+                # CLEAR KB
                 self.KBArea.delete(1.0, END)
-                    # Rewrite KB
+                # Rewrite KB
                 for i in range(len(self.agent.KB.KB)):
                     temp_string = 'R' + str(i + 1) + ': '
                     for j in self.agent.KB.KB[i]:

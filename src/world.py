@@ -68,7 +68,9 @@ class WumpusWorld:
         except IOError:
             return None
 
-
+    def grabGold(self, i, j):
+        self.__numGold -= 1
+        self.listTiles[i][j].removeGold()
     def killWumpus(self, i, j):
         self.__numWumpus -= 1
         self.listTiles[i][j].removeWumpus()

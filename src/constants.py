@@ -1,6 +1,24 @@
 import pygame
 import enum
 
+# Path
+DOOR = '../Assets/door.png'
+TILE = '../Assets/floor.png'
+GOLD_TILE = '../Assets/floor_gold.png'
+WUMPUS = '../Assets/wumpus.png'
+GOLD = '../Assets/gold.png'
+PIT = '../Assets/pit.png'
+TERRAIN ='../Assets/terrain.png'
+PLAYER_DOWN ='../Assets/agent_down.png'
+PLAYER_UP ='../Assets/agent_up.png'
+PLAYER_LEFT ='../Assets/agent_left.png'
+PLAYER_RIGHT ='../Assets/agent_right.png'
+ARROW_DOWN ='../Assets/arrow_down.png'
+ARROW_UP ='../Assets/arrow_up.png'
+ARROW_LEFT ='../Assets/arrow_left.png'
+ARROW_RIGHT ='../Assets/arrow_right.png'
+SCORE ='../Assets/score_icon.png'
+
 # Window
 SCREEN_WIDTH = 970
 SCREEN_HEIGHT = 710
@@ -22,9 +40,12 @@ FONT_MRSMONSTER = '../Assets/Fonts/mrsmonster.ttf'
 # Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-LIGHT_GREY = (170, 170, 170)
-DARK_GREY = (75, 75, 75)
+BROWN = (170, 170, 170)
+BRONZE = (75, 75, 75)
 RED = (255, 0, 0)
+BROWN = (218, 160, 109)
+BRONZE = (205, 127, 50)
+
 
 class Action(enum.Enum):
     LEFT = 1

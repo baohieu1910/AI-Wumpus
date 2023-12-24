@@ -70,7 +70,6 @@ class Search:
 
 
     def movement_cost(self, current, next):
-        print(current)
         if isinstance(current,enum.Enum):
             if int(current.value) == int(next.value):
                 return 1
@@ -117,4 +116,3 @@ class Search:
                     return 3
                 else:
                     return 2
-
