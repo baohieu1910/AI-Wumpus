@@ -8,6 +8,7 @@ import Agent
 from WumpusNode import WumpusNode
 from Constants import *
 from AgentBrain import AgentBrain
+
 DELAY = 10
 
 class Board:
@@ -68,8 +69,6 @@ class Board:
         # Score
         self.score = 0
 
-
-
     def createWorld(self):
         for i in range(self.world.height):
             tiles_line = []
@@ -77,10 +76,8 @@ class Board:
                 tiles_line.append(self.canvas.create_image(64 * j, 64 * i, image=self.TILE, anchor=NW))
             self.tiles.append(tiles_line)
 
-
         self.canvas.delete(self.tiles[self.world.doorPos[0]][self.world.doorPos[1]])
         self.tiles[self.world.doorPos[0]][self.world.doorPos[1]] = self.canvas.create_image(64 * self.world.doorPos[1], 64 * self.world.doorPos[0], image=self.DOOR, anchor=NW)
-
 
         for i in range(self.world.height):
             objects_line = []
@@ -97,7 +94,6 @@ class Board:
                 else:
                     objects_line.append(None)
             self.objects.append(objects_line)
-
 
         for i in range(self.world.height):
             warnings_line = []
@@ -138,7 +134,6 @@ class Board:
         self.canvas.create_image(64, 64 * self.world.height + 16, image=self.SCORE, anchor=NW)
         self.score_display = self.canvas.create_text(64 + 64, 64 * self.world.height + 16, fill='#ffff00', font=self.scoreFont, text=str(self.score), anchor=NW)
 
-
         # Output frame
         self.buttonStep = Button(self.outputFrame, text='STEP', height=2, width=30, command=lambda: self.changeRunMode(0))
         self.buttonRun = Button(self.outputFrame, text='RUN ALL', height=2, width=30, command=lambda: self.changeRunMode(1))
@@ -152,28 +147,26 @@ class Board:
         self.actionArea.grid(row=1, column=0, columnspan=2)
 
     ############################# ACTIONS #############################
-    
     def validPos(self, pos):
         return pos[0] >= 0 and pos[0] <= self.world.height - 1 and pos[1] >= 0 and pos[1] <= self.world.width - 1
-
 
     def moveForward(self, action): # action: current action
         nextPos = None
         fixed_x = 0
         fixed_y = 0
 
-        if action == Action.LEFT:
-            nextPos = (self.agentPos[0], self.agentPos[1] - 1)
-            fixed_x = -64
-        elif action == Action.RIGHT:
-            nextPos = (self.agentPos[0], self.agentPos[1] + 1)
-            fixed_x = 64
-        elif action == Action.UP:
+        if action == Action.UP:
             nextPos = (self.agentPos[0] - 1, self.agentPos[1])
             fixed_y = -64
+        elif action == Action.LEFT:
+            nextPos = (self.agentPos[0], self.agentPos[1] - 1)
+            fixed_x = -64
         elif action == Action.DOWN:
             nextPos = (self.agentPos[0] + 1, self.agentPos[1])
             fixed_y = 64
+        elif action == Action.RIGHT:
+            nextPos = (self.agentPos[0], self.agentPos[1] + 1)
+            fixed_x = 64
                 
         if self.validPos(nextPos):
             self.world.movePlayer(self.agentPos[0], self.agentPos[1], nextPos[0], nextPos[1])
@@ -190,35 +183,35 @@ class Board:
             self.canvas.itemconfig(self.score_display, text=str(self.score))
 
             tile_at_loc = self.world.listTiles[self.agentPos[0]][self.agentPos[1]]
-            if tile_at_loc.getPit():
-                self.score -= 10000
-                self.canvas.itemconfig(self.score_display, text=str(self.score))
-                self.canvas.update()
-                time.sleep(0.5)
-                self.endGame("Pit")
-            elif tile_at_loc.getWumpus():
+
+            if tile_at_loc.getWumpus():
                 self.score -= 10000
                 self.canvas.itemconfig(self.score_display, text=str(self.score))
                 self.canvas.update()
                 time.sleep(0.5)
                 self.endGame("Wumpus")
-
+            elif tile_at_loc.getPit():
+                self.score -= 10000
+                self.canvas.itemconfig(self.score_display, text=str(self.score))
+                self.canvas.update()
+                time.sleep(0.5)
+                self.endGame("Pit")
 
     def shootForward(self, direction): # direction: current state
         arrow = None
         arrow_loc = None
-        if self.agent.currentState == Action.LEFT:
-            arrow_loc = (self.agentPos[0], self.agentPos[1] - 1)
-            arrow = self.canvas.create_image(64 * arrow_loc[1], 64 * arrow_loc[0], image=self.ARROW_LEFT, anchor=NW)
-        elif self.agent.currentState == Action.RIGHT:
-            arrow_loc = (self.agentPos[0], self.agentPos[1] + 1)
-            arrow = self.canvas.create_image(64 * arrow_loc[1], 64 * arrow_loc[0], image=self.ARROW_RIGHT, anchor=NW)
-        elif self.agent.currentState == Action.UP:
+        if self.agent.currentState == Action.UP:
             arrow_loc = (self.agentPos[0] - 1, self.agentPos[1])
             arrow = self.canvas.create_image(64 * arrow_loc[1], 64 * arrow_loc[0], image=self.ARROW_UP, anchor=NW)
+        elif self.agent.currentState == Action.LEFT:
+            arrow_loc = (self.agentPos[0], self.agentPos[1] - 1)
+            arrow = self.canvas.create_image(64 * arrow_loc[1], 64 * arrow_loc[0], image=self.ARROW_LEFT, anchor=NW)
         elif self.agent.currentState == Action.DOWN:
             arrow_loc = (self.agentPos[0] + 1, self.agentPos[1])
             arrow = self.canvas.create_image(64 * arrow_loc[1], 64 * arrow_loc[0], image=self.ARROW_DOWN, anchor=NW)
+        elif self.agent.currentState == Action.RIGHT:
+            arrow_loc = (self.agentPos[0], self.agentPos[1] + 1)
+            arrow = self.canvas.create_image(64 * arrow_loc[1], 64 * arrow_loc[0], image=self.ARROW_RIGHT, anchor=NW)
 
         self.canvas.update()
         time.sleep(0.5)
@@ -226,7 +219,6 @@ class Board:
 
         self.score -= 100
         self.canvas.itemconfig(self.score_display, text=str(self.score))
-
 
         if self.world.listTiles[arrow_loc[0]][arrow_loc[1]].getWumpus():
             self.agent.scream = True
@@ -251,7 +243,6 @@ class Board:
             if not self.world.leftWumpus() and not self.world.leftGold():
                 self.actionArea.insert(END, 'ACTION: Clear map\n')
                 self.endGame("Clear")
-
 
     def grabGold(self):
         if self.world.listTiles[self.agentPos[0]][self.agentPos[1]].getGold():
@@ -280,7 +271,6 @@ class Board:
                 self.actionArea.insert(END, 'ACTION: Clear map\n')
                 self.endGame("Clear")
 
-
     def endGame(self, reason):
         self.gameState = NOT_RUNNING
         for i in range(self.world.height):
@@ -290,7 +280,6 @@ class Board:
         self.buttonRun['state'] = DISABLED
         self.buttonStep['state'] = DISABLED
 
-
     def senseObject(self):
         if self.world.listTiles[self.agentPos[0]][self.agentPos[1]].getStench() and self.world.listTiles[self.agentPos[0]][self.agentPos[1]].getBreeze():
             self.actionArea.insert(END, 'SENSE: Stench, Breeze\n')
@@ -299,7 +288,6 @@ class Board:
                 self.actionArea.insert(END, 'SENSE: Stench\n')
             if self.world.listTiles[self.agentPos[0]][self.agentPos[1]].getBreeze():
                 self.actionArea.insert(END, 'SENSE: Breeze\n')
-
 
     def changeRunMode(self, key):
         self.runMode = key        
@@ -313,15 +301,8 @@ class Board:
                 self.senseObject()
                 self.actionArea.see(END)
                 action = self.agent.getAction()
-                if action == Action.DOWN:
-                    if action == self.agent.currentState:
-                        self.actionArea.insert(END, 'ACTION: Move forward\n')
-                        self.moveForward(action)
-                    else:
-                        self.canvas.itemconfigure(self.player, image=self.PLAYER_DOWN)
-                        self.actionArea.insert(END, 'ACTION: Face down\n')
-                        self.agent.currentState = Action.DOWN
-                elif action == Action.UP:
+
+                if action == Action.UP:
                     if action == self.agent.currentState:
                         self.actionArea.insert(END, 'ACTION: Move forward\n')
                         self.moveForward(action)
@@ -337,6 +318,14 @@ class Board:
                         self.canvas.itemconfigure(self.player, image=self.PLAYER_LEFT)
                         self.actionArea.insert(END, 'ACTION: Face left\n')
                         self.agent.currentState = Action.LEFT
+                elif action == Action.DOWN:
+                    if action == self.agent.currentState:
+                        self.actionArea.insert(END, 'ACTION: Move forward\n')
+                        self.moveForward(action)
+                    else:
+                        self.canvas.itemconfigure(self.player, image=self.PLAYER_DOWN)
+                        self.actionArea.insert(END, 'ACTION: Face down\n')
+                        self.agent.currentState = Action.DOWN
                 elif action == Action.RIGHT:
                     if action == self.agent.currentState:
                         self.actionArea.insert(END, 'ACTION: Move forward\n')
@@ -370,18 +359,8 @@ class Board:
             if self.gameState == RUNNING:
                 self.senseObject()
                 self.actionArea.see(END)
-
                 action = self.agent.getAction()
-
-                if action == Action.DOWN:
-                    if action == self.agent.currentState:
-                        self.actionArea.insert(END, 'ACTION: Move forward\n')
-                        self.moveForward(action)
-                    else:
-                        self.canvas.itemconfigure(self.player, image=self.PLAYER_DOWN)
-                        self.actionArea.insert(END, 'ACTION: Face down\n')
-                        self.agent.currentState = Action.DOWN
-                elif action == Action.UP:
+                if action == Action.UP:
                     if action == self.agent.currentState:
                         self.actionArea.insert(END, 'ACTION: Move forward\n')
                         self.moveForward(action)
@@ -397,6 +376,14 @@ class Board:
                         self.canvas.itemconfigure(self.player, image=self.PLAYER_LEFT)
                         self.actionArea.insert(END, 'ACTION: Face left\n')
                         self.agent.currentState = Action.LEFT
+                elif action == Action.DOWN:
+                    if action == self.agent.currentState:
+                        self.actionArea.insert(END, 'ACTION: Move forward\n')
+                        self.moveForward(action)
+                    else:
+                        self.canvas.itemconfigure(self.player, image=self.PLAYER_DOWN)
+                        self.actionArea.insert(END, 'ACTION: Face down\n')
+                        self.agent.currentState = Action.DOWN
                 elif action == Action.RIGHT:
                     if action == self.agent.currentState:
                         self.actionArea.insert(END, 'ACTION: Move forward\n')

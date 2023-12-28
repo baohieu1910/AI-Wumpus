@@ -14,7 +14,6 @@ class WumpusWorld:
 
     def get_Adjacents(self, i, j):
         adj = []
-
         if i - 1 >= 0:
             adj.append((i - 1, j))
         if i + 1 <= self.height - 1:
@@ -23,7 +22,6 @@ class WumpusWorld:
             adj.append((i, j - 1))
         if j + 1 <= self.width - 1:
             adj.append((i, j + 1))
-
         return adj
 
     def read_Map(self, filename):
@@ -48,6 +46,9 @@ class WumpusWorld:
                 # Tile's objects
                 for i in range(self.height):
                     for j in range(self.width):
+                        if 'A' in tiles[i][j]:
+                            (self.listTiles[i][j]).setPlayer()
+                            self.doorPos = (i, j)
                         if 'G' in tiles[i][j]:
                             (self.listTiles[i][j]).setGold()
                             self.__numGold += 1
@@ -62,15 +63,14 @@ class WumpusWorld:
                             adj = self.get_Adjacents(i, j)
                             for a in adj:
                                 (self.listTiles[a[0]][a[1]]).setStench()
-                        if 'A' in tiles[i][j]:
-                            (self.listTiles[i][j]).setPlayer()
-                            self.doorPos = (i, j)
+
         except IOError:
             return None
 
     def grabGold(self, i, j):
         self.__numGold -= 1
         self.listTiles[i][j].removeGold()
+
     def killWumpus(self, i, j):
         self.__numWumpus -= 1
         self.listTiles[i][j].removeWumpus()
@@ -84,8 +84,7 @@ class WumpusWorld:
         self.listTiles[after_i][after_j].setPlayer()
 
     def leftGold(self):
-        return False if self.__numGold == 0 else True
+        return bool(self.__numGold)
 
     def leftWumpus(self):
-        return False if self.__numWumpus == 0 else True
-
+        return bool(self.__numWumpus)
