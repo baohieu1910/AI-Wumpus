@@ -9,10 +9,14 @@ WUMPUS = '../Assets/wumpus.png'
 GOLD = '../Assets/gold.png'
 PIT = '../Assets/pit.png'
 TERRAIN ='../Assets/terrain.png'
+BREEZE = '../Assets/breeze.png'
+STENCH = '../Assets/stench.png'
+
 PLAYER_DOWN ='../Assets/agent_down.png'
 PLAYER_UP ='../Assets/agent_up.png'
 PLAYER_LEFT ='../Assets/agent_left.png'
 PLAYER_RIGHT ='../Assets/agent_right.png'
+
 ARROW_DOWN ='../Assets/arrow_down.png'
 ARROW_UP ='../Assets/arrow_up.png'
 ARROW_LEFT ='../Assets/arrow_left.png'
@@ -24,9 +28,9 @@ SCREEN_WIDTH = 970
 SCREEN_HEIGHT = 710
 CAPTION = 'Wumpus World'
 
-MAP_STATE_LIST = ['MAP_1', 'MAP_2', 'MAP_3', 'MAP_4', 'MAP_5', ]
-
 # Map
+MAP_STATE_LIST = ['MAP_1', 'MAP_2', 'MAP_3', 'MAP_4', 'MAP_5']
+
 MAP_LIST = ['../Input/map_1.txt',
             '../Input/map_2.txt',
             '../Input/map_3.txt',
@@ -46,7 +50,7 @@ RED = (255, 0, 0)
 BROWN = (218, 160, 109)
 BRONZE = (205, 127, 50)
 
-
+#Action
 class Action(enum.Enum):
     LEFT = 1
     UP = 2
@@ -56,14 +60,14 @@ class Action(enum.Enum):
     GRAB = 6
     CLIMB = 7
 
-# state
+# State
 RUNNING = 'running'
 NOT_RUNNING = 'not_running'
 SELECT_MAP = 'select_map'
 HOME = 'home'
 ABOUT_US = 'about_us'
 
-# postion
+# Postion
 TITLE_POS = pygame.Rect(235, 180, 500, 50)
 MEMBER_1_POS = pygame.Rect(235, 270, 500, 30)
 MEMBER_2_POS = pygame.Rect(235, 310, 500, 30)

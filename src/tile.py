@@ -19,7 +19,7 @@ class Tile:
         return self.__isWumpus
 
     def getStench(self):
-        return False if self.__numStench == 0 else True
+        return bool(self.__numStench)
         
     def getGold(self):
         return self.__isGold

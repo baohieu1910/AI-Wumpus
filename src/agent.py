@@ -18,5 +18,3 @@ class Agent:
             self.current_state = state[self.current_state].up
         elif self.current_direction == Action.DOWN and state[self.current_state].down != 'Wall':
             self.current_state = state[self.current_state].down
-
-

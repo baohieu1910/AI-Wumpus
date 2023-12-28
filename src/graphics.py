@@ -47,6 +47,8 @@ class Board:
         self.GOLD_TILE = PhotoImage(file=GOLD_TILE)
         self.WUMPUS = PhotoImage(file=WUMPUS)
         self.GOLD = PhotoImage(file=GOLD)
+        self.BREEZE = PhotoImage(file=BREEZE)
+        self.STENCH = PhotoImage(file=STENCH)
         self.PIT = PhotoImage(file=PIT)
         self.TERRAIN = PhotoImage(file=TERRAIN)
         self.PLAYER_DOWN = PhotoImage(file=PLAYER_DOWN)
@@ -108,11 +110,11 @@ class Board:
                 tile_at_loc = self.world.listTiles[i][j]
                 first_cord = (i, j)
                 if tile_at_loc.getBreeze():
-                    warning_at_loc.append(self.canvas.create_text(64 * j + 3, 64 * i, fill='white', font=warningFont, text='Breeze', anchor=NW))
+                    warning_at_loc.append(self.canvas.create_image(64 * j, 64 * i, image=self.BREEZE, anchor=NW))
                 else:
                     warning_at_loc.append(None)
                 if tile_at_loc.getStench():
-                    warning_at_loc.append(self.canvas.create_text(64 * j + 3, (64 * i) + 50, fill='white', font=warningFont, text='Stench', anchor=NW))
+                    warning_at_loc.append(self.canvas.create_image(64 * j, 64 * i, image=self.STENCH, anchor=NW))
                 else:
                     warning_at_loc.append(None)
                 if not tile_at_loc.getBreeze() and not tile_at_loc.getStench():
