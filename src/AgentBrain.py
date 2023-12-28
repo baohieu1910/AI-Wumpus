@@ -28,13 +28,8 @@ class AgentBrain(Agent):
         if current_node.name in self.state.unvisited_safe:
             self.state.unvisited_safe.remove(current_node.name)
 
-
-
         if self.scream == True:
-            if self.agent.current_direction == Action.RIGHT:
-                self.state.unvisited_safe.append(current_node.right)
-                self.clearKB(current_node.right)
-            elif self.agent.current_direction == Action.UP:
+            if self.agent.current_direction == Action.UP:
                 self.state.unvisited_safe.append(current_node.up)
                 self.clearKB(current_node.up)
             elif self.agent.current_direction == Action.LEFT:
@@ -43,6 +38,9 @@ class AgentBrain(Agent):
             elif self.agent.current_direction == Action.DOWN:
                 self.state.unvisited_safe.append(current_node.down)
                 self.clearKB(current_node.down)
+            elif self.agent.current_direction == Action.RIGHT:
+                self.state.unvisited_safe.append(current_node.right)
+                self.clearKB(current_node.right)
             self.scream = False
 
         for item in self.state.visited[-10:]:
@@ -102,14 +100,14 @@ class AgentBrain(Agent):
         sentence = []
         prefix = 'P'
         current_prefix = 'B'
-        if current_node.right not in self.state.visited and current_node.right != 'Wall':
-            sentence.append(prefix + current_node.right)
         if current_node.up not in self.state.visited and current_node.up != 'Wall':
             sentence.append(prefix + current_node.up)
         if current_node.left not in self.state.visited and current_node.left != 'Wall':
             sentence.append(prefix + current_node.left)
         if current_node.down not in self.state.visited and current_node.down != 'Wall':
             sentence.append(prefix + current_node.down)
+        if current_node.right not in self.state.visited and current_node.right != 'Wall':
+            sentence.append(prefix + current_node.right)
         self.KB.add(sentence)
         self.KB.add([current_prefix + current_node.name])
 
@@ -117,14 +115,14 @@ class AgentBrain(Agent):
         sentence = []
         prefix = 'W'
         current_prefix = 'S'
-        if current_node.right not in self.state.visited and current_node.right != 'Wall':
-            sentence.append(prefix + current_node.right)
         if current_node.up not in self.state.visited and current_node.up != 'Wall':
             sentence.append(prefix + current_node.up)
         if current_node.left not in self.state.visited and current_node.left != 'Wall':
             sentence.append(prefix + current_node.left)
         if current_node.down not in self.state.visited and current_node.down != 'Wall':
             sentence.append(prefix + current_node.down)
+        if current_node.right not in self.state.visited and current_node.right != 'Wall':
+            sentence.append(prefix + current_node.right)
         self.KB.add(sentence)
         self.KB.add([current_prefix + current_node.name])
 
@@ -141,20 +139,16 @@ class AgentBrain(Agent):
 
     def handle_no_breeze(self, current_node):
         prefix = '~P'
-        if current_node.right not in self.state.visited and current_node.right != 'Wall':
-            self.KB.add([prefix + current_node.right])
         if current_node.up not in self.state.visited and current_node.up != 'Wall':
             self.KB.add([prefix + current_node.up])
         if current_node.left not in self.state.visited and current_node.left != 'Wall':
             self.KB.add([prefix + current_node.left])
         if current_node.down not in self.state.visited and current_node.down != 'Wall':
             self.KB.add([prefix + current_node.down])
+        if current_node.right not in self.state.visited and current_node.right != 'Wall':
+            self.KB.add([prefix + current_node.right])
 
     def check_safe(self, current_node):
-        if current_node.right != 'Wall' and current_node.right not in self.state.visited and current_node.right not in self.state.unvisited_safe:
-            # alpha = \neg U . Safe => U = '~W' => \neg U = 'W'
-            if self.KB.check(['W' + current_node.right]) and self.KB.check(['P' + current_node.right]):
-                self.state.unvisited_safe.append(current_node.right)
         if current_node.up != 'Wall' and current_node.up not in self.state.visited and current_node.up not in self.state.unvisited_safe:
             if self.KB.check(['W' + current_node.up]) and self.KB.check(['P' + current_node.up]):
                 self.state.unvisited_safe.append(current_node.up)
@@ -164,46 +158,42 @@ class AgentBrain(Agent):
         if current_node.down != 'Wall' and current_node.down not in self.state.visited and current_node.down not in self.state.unvisited_safe:
             if self.KB.check(['W' + current_node.down]) and self.KB.check(['P' + current_node.down]):
                 self.state.unvisited_safe.append(current_node.down)
+        if current_node.right != 'Wall' and current_node.right not in self.state.visited and current_node.right not in self.state.unvisited_safe:
+            if self.KB.check(['W' + current_node.right]) and self.KB.check(['P' + current_node.right]):
+                self.state.unvisited_safe.append(current_node.right)
 
     def check_wumpus(self, current_node):
         row = current_node.row
         col = current_node.col
-        if current_node.right != "Wall":
-            if self.KB.check(["W" + str(row - 1) + "," + str(col)]) and self.KB.check(
-                    ["~S" + str(row - 1) + "," + str(col + 1)]) or self.KB.check(
-                    ["W" + str(row + 1) + "," + str(col)]) and self.KB.check(
-                    ["~S" + str(row + 1) + "," + str(col + 1)]):
-                self.kill_wumpus("Right")
-        if current_node.down != "Wall":
-            if self.KB.check(["W" + str(row) + "," + str(col - 1)]) and self.KB.check(
-                    ["~S" + str(row + 1) + "," + str(col - 1)]) or self.KB.check(
-                    ["W" + str(row) + "," + str(col + 1)]) and self.KB.check(
-                    ["~S" + str(row + 1) + "," + str(col + 1)]):
-                self.kill_wumpus("Down")
-        if current_node.left != "Wall":
-            if self.KB.check(["W" + str(row - 1) + "," + str(col)]) and self.KB.check(
-                    ["~S" + str(row - 1) + "," + str(col - 1)]) or self.KB.check(
-                    ["W" + str(row + 1) + "," + str(col)]) and self.KB.check(
-                    ["~S" + str(row + 1) + "," + str(col - 1)]):
-                self.kill_wumpus("Left")
         if current_node.up != "Wall":
-            if self.KB.check(["W" + str(row) + "," + str(col - 1)]) and self.KB.check(
-                    ["~S" + str(row - 1) + "," + str(col - 1)]) or self.KB.check(
-                    ["W" + str(row) + "," + str(col + 1)]) and self.KB.check(
-                    ["~S" + str(row - 1) + "," + str(col + 1)]):
+            if (self.KB.check(["W" + str(row) + "," + str(col - 1)])
+                    and self.KB.check(["~S" + str(row - 1) + "," + str(col - 1)])
+                    or self.KB.check(["W" + str(row) + "," + str(col + 1)])
+                    and self.KB.check(["~S" + str(row - 1) + "," + str(col + 1)])):
                 self.kill_wumpus("Up")
+        if current_node.left != "Wall":
+            if (self.KB.check(["W" + str(row - 1) + "," + str(col)])
+                    and self.KB.check(["~S" + str(row - 1) + "," + str(col - 1)])
+                    or self.KB.check(["W" + str(row + 1) + "," + str(col)])
+                    and self.KB.check(["~S" + str(row + 1) + "," + str(col - 1)])):
+                self.kill_wumpus("Left")
+        if current_node.down != "Wall":
+            if (self.KB.check(["W" + str(row) + "," + str(col - 1)])
+                    and self.KB.check(["~S" + str(row + 1) + "," + str(col - 1)])
+                    or self.KB.check(["W" + str(row) + "," + str(col + 1)])
+                    and self.KB.check(["~S" + str(row + 1) + "," + str(col + 1)])):
+                self.kill_wumpus("Down")
+        if current_node.right != "Wall":
+            if (self.KB.check(["W" + str(row - 1) + "," + str(col)])
+                    and self.KB.check(["~S" + str(row - 1) + "," + str(col + 1)])
+                    or self.KB.check(["W" + str(row + 1) + "," + str(col)])
+                    and self.KB.check(["~S" + str(row + 1) + "," + str(col + 1)])):
+                self.kill_wumpus("Right")
 
     def kill_wumpus(self, direction):
         self.killing_wumpus = True
         self.move = []
-        if direction == 'Right':
-            if self.agent.current_direction == Action.RIGHT:
-                self.move.insert(0, Action.SHOOT)
-            elif self.agent.current_direction != Action.RIGHT:
-                self.agent.current_direction = Action.RIGHT
-                self.move.insert(0, Action.SHOOT)
-                self.move.insert(0, Action.RIGHT)
-        elif direction == 'Up':
+        if direction == 'Up':
             if self.agent.current_direction == Action.UP:
                 self.move.insert(0, Action.SHOOT)
             elif self.agent.current_direction != Action.UP:
@@ -224,6 +214,13 @@ class AgentBrain(Agent):
                 self.agent.current_direction = Action.DOWN
                 self.move.insert(0, Action.SHOOT)
                 self.move.insert(0, Action.DOWN)
+        elif direction == 'Right':
+            if self.agent.current_direction == Action.RIGHT:
+                self.move.insert(0, Action.SHOOT)
+            elif self.agent.current_direction != Action.RIGHT:
+                self.agent.current_direction = Action.RIGHT
+                self.move.insert(0, Action.SHOOT)
+                self.move.insert(0, Action.RIGHT)
 
     def move_list(self, path):
         direction = self.agent.current_direction
@@ -235,26 +232,7 @@ class AgentBrain(Agent):
             new_state = WumpusNode(int(row), int(col), self.world)
             self.state.add_state(new_state)
 
-            if str(direction.name) == str(Action.RIGHT.name):
-                if item == current_node.right:
-                    move_list.append(Action.RIGHT)
-                    current_node = self.state.state[current_node.right]
-                elif item == current_node.up:
-                    move_list.append(Action.UP)
-                    move_list.append(Action.UP)
-                    direction = Action.UP
-                    current_node = self.state.state[current_node.up]
-                elif item == current_node.down:
-                    move_list.append(Action.DOWN)
-                    move_list.append(Action.DOWN)
-                    direction = Action.DOWN
-                    current_node = self.state.state[current_node.down]
-                elif item == current_node.left:
-                    move_list.append(Action.LEFT)
-                    move_list.append(Action.LEFT)
-                    direction = Action.LEFT
-                    current_node = self.state.state[current_node.left]
-            elif str(direction.name) == str(Action.UP.name):
+            if str(direction.name) == str(Action.UP.name):
                 if item == current_node.right:
                     move_list.append(Action.RIGHT)
                     move_list.append(Action.RIGHT)
@@ -305,6 +283,25 @@ class AgentBrain(Agent):
                     current_node = self.state.state[current_node.up]
                 elif item == current_node.down:
                     move_list.append(Action.DOWN)
+                    current_node = self.state.state[current_node.down]
+                elif item == current_node.left:
+                    move_list.append(Action.LEFT)
+                    move_list.append(Action.LEFT)
+                    direction = Action.LEFT
+                    current_node = self.state.state[current_node.left]
+            elif str(direction.name) == str(Action.RIGHT.name):
+                if item == current_node.right:
+                    move_list.append(Action.RIGHT)
+                    current_node = self.state.state[current_node.right]
+                elif item == current_node.up:
+                    move_list.append(Action.UP)
+                    move_list.append(Action.UP)
+                    direction = Action.UP
+                    current_node = self.state.state[current_node.up]
+                elif item == current_node.down:
+                    move_list.append(Action.DOWN)
+                    move_list.append(Action.DOWN)
+                    direction = Action.DOWN
                     current_node = self.state.state[current_node.down]
                 elif item == current_node.left:
                     move_list.append(Action.LEFT)

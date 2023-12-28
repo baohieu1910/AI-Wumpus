@@ -14,7 +14,6 @@ class KnowledgeBase:
                 elif item[0] == "~" and item[1:] == query1[0][0:]:
                     query2.remove(item)
 
-
     def check(self,query):
         KB_temp = self.KB.copy()
         KB_temp.append(query)
@@ -25,7 +24,6 @@ class KnowledgeBase:
             else:
                 return True
         return False
-
 
     def remove(self,sentence):
         for clause in self.KB:
