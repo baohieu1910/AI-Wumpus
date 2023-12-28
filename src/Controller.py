@@ -1,4 +1,4 @@
-from constants import *
+from Constants import *
 
 class ManualAgent():
     def __init__(self):

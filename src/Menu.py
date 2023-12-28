@@ -1,6 +1,6 @@
 import pygame
 
-from constants import *
+from Constants import *
 import sys
 
 class Menu():

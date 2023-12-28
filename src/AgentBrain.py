@@ -1,16 +1,16 @@
-from agent import Agent
-import gamestate
-import kb
+from Agent import Agent
+from GameState import GameState
+from KB import KnowledgeBase
 from WumpusNode import WumpusNode
-from search import *
+from Search import *
 
 
 class AgentBrain(Agent):
     def __init__(self, world, starting_node):  # Starting node = (1,1)
-        self.state = gamestate.Game_State(world)
+        self.state = GameState(world)
         self.state.add_state(WumpusNode(starting_node.row, starting_node.col, world))
         self.agent = Agent(state=starting_node.name)
-        self.KB = kb.Knowledge_base()
+        self.KB = KnowledgeBase()
         self.KB.add(["~P" + str(starting_node.name)])
         self.KB.add(["~W" + str(starting_node.name)])
         self.exit = False

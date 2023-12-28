@@ -1,4 +1,4 @@
-class Knowledge_base:
+class KnowledgeBase:
     def __init__(self):
         self.KB = []
 

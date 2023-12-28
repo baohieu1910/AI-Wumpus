@@ -1,12 +1,12 @@
-import world, tile, controller
+import World, Tile, Controller
 from tkinter import *
 from tkinter import font
 from tkinter import scrolledtext
 import time
 
-import agent
+import Agent
 from WumpusNode import WumpusNode
-from constants import *
+from Constants import *
 from AgentBrain import AgentBrain
 DELAY = 10
 
@@ -21,13 +21,12 @@ class Board:
         
         self.canvas.pack(side="left", fill="both", expand=True)
         self.outputFrame.pack(side="right", fill="both", expand=False)
-        
-        # KB and Action
-        self.KBArea = None
+
         self.actionArea = None
         self.buttonStep = None
         self.buttonRun = None
         self.buttonFont = font.Font(size=10)
+        self.scoreFont = font.Font(family='KacstBook', size=22)
 
         self.runMode = -1
 
@@ -39,7 +38,6 @@ class Board:
         self.terrains = []
         self.player = None
         self.display_score = None
-        self.scoreFont = font.Font(family='KacstBook', size=22)
 
         # Load images
         self.DOOR = PhotoImage(file=DOOR)
@@ -64,14 +62,13 @@ class Board:
         # Game state
         self.gameState = NOT_RUNNING
 
-        self.agent = None # PL agent
+        self.agent = None
         self.agentPos = None
 
         # Score
         self.score = 0
 
 
-    ############################# CREATE WORLD #############################
 
     def createWorld(self):
         for i in range(self.world.height):
@@ -102,13 +99,11 @@ class Board:
             self.objects.append(objects_line)
 
 
-        warningFont = font.Font(family='Verdana', size=10)
         for i in range(self.world.height):
             warnings_line = []
             for j in range(self.world.width):
                 warning_at_loc = []
                 tile_at_loc = self.world.listTiles[i][j]
-                first_cord = (i, j)
                 if tile_at_loc.getBreeze():
                     warning_at_loc.append(self.canvas.create_image(64 * j, 64 * i, image=self.BREEZE, anchor=NW))
                 else:

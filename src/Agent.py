@@ -1,4 +1,4 @@
-from search import *
+from Search import *
 
 class Agent:
     def __init__(self, state):

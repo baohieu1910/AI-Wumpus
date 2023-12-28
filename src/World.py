@@ -1,4 +1,4 @@
-import tile
+from Tile import Tile
 from random import randrange
 
 
@@ -42,7 +42,7 @@ class WumpusWorld:
                 for i in range(self.height):
                     tile_line = []
                     for j in range(self.width):
-                        tile_line.append(tile.Tile())
+                        tile_line.append(Tile())
                     self.listTiles.append(tile_line)
 
                 # Tile's objects

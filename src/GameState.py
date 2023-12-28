@@ -1,6 +1,6 @@
-import world
+import World
 
-class Game_State:
+class GameState:
     def __init__(self,world):
         self.visited = []
         self.unvisited_safe = []
