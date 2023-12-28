@@ -149,14 +149,12 @@ class Board:
         self.buttonRun = Button(self.outputFrame, text='RUN ALL', height=2, width=30, command=lambda: self.changeRunMode(1))
         self.buttonStep['font'] = self.buttonFont
         self.buttonRun['font'] = self.buttonFont
-        
-        self.KBArea = scrolledtext.ScrolledText(self.outputFrame, wrap=WORD, width=40, height=20, font=('Verdana', 15))
-        self.actionArea = scrolledtext.ScrolledText(self.outputFrame, wrap=WORD, width=40, height=6, font=('Verdana', 15))
+
+        self.actionArea = scrolledtext.ScrolledText(self.outputFrame, wrap=WORD, width=40, height=26, font=('Verdana', 15))
 
         self.buttonStep.grid(row=0, column=0)
         self.buttonRun.grid(row=0, column=1)
-        self.KBArea.grid(row=1, column=0, columnspan=2)
-        self.actionArea.grid(row=2, column=0, columnspan=2)
+        self.actionArea.grid(row=1, column=0, columnspan=2)
 
     ############################# ACTIONS #############################
     
@@ -283,7 +281,6 @@ class Board:
                     self.canvas.tag_raise(self.warnings[self.agentPos[0]][self.agentPos[1]][1], self.tiles[self.agentPos[0]][self.agentPos[1]])
             self.canvas.tag_raise(self.player, self.tiles[self.agentPos[0]][self.agentPos[1]])
 
-            # END GAME ?
             if not self.world.leftWumpus() and not self.world.leftGold():
                 self.actionArea.insert(END, 'ACTION: Clear map\n')
                 self.endGame("Clear")
@@ -321,24 +318,6 @@ class Board:
                 self.senseObject()
                 self.actionArea.see(END)
                 action = self.agent.getAction()
-
-                # Update KB
-                # CLEAR KB
-                self.KBArea.delete(1.0, END)
-                # Rewrite KB
-                for i in range(len(self.agent.KB.KB)):
-                    temp_string = 'R' + str(i + 1) + ': '
-                    for j in self.agent.KB.KB[i]:
-                        if j[0] == '~':
-                            temp_string += '¬' + j[1:]
-                        else:
-                            temp_string += j
-                        if j != self.agent.KB.KB[i][-1]:
-                            temp_string += ' ∨ '
-                    self.KBArea.insert(END, temp_string + '\n')
-                    self.KBArea.see(END)
-
-
                 if action == Action.DOWN:
                     if action == self.agent.currentState:
                         self.actionArea.insert(END, 'ACTION: Move forward\n')
@@ -398,23 +377,6 @@ class Board:
                 self.actionArea.see(END)
 
                 action = self.agent.getAction()
-
-                # Update KB
-                    # CLEAR KB
-                self.KBArea.delete(1.0, END)
-                    # Rewrite KB
-                for i in range(len(self.agent.KB.KB)):
-                    temp_string = 'R' + str(i + 1) + ': '
-                    for j in self.agent.KB.KB[i]:
-                        if j[0] == '~':
-                            temp_string += '¬' + j[1:]
-                        else:
-                            temp_string += j
-                        if j != self.agent.KB.KB[i][-1]:
-                            temp_string += ' ∨ '
-                    self.KBArea.insert(END, temp_string + '\n')
-                    self.KBArea.see(END)
-
 
                 if action == Action.DOWN:
                     if action == self.agent.currentState:
