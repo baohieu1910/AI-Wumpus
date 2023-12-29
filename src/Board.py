@@ -397,8 +397,8 @@ class Board:
 
                 # self.senseObject()
                 self.actionArea.see(END)
-                self.root.update()
-                self.root.after(DELAY)
+                self.graphic.root.update()
+                self.graphic.root.after(DELAY)
 
             self.graphic.root.mainloop()
 
