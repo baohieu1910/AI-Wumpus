@@ -8,7 +8,7 @@ from Search import *
 class AgentBrain():
     def __init__(self, world, initNode):
         self.state = GameState(world)
-        self.state.add_state(WumpusNode(initNode.row, initNode.col, world))
+        self.state.addState(WumpusNode(initNode.row, initNode.col, world))
         self.agent = Agent(initNode.name)
         self.KB = KnowledgeBase()
         self.KB.add(["~P" + str(initNode.name)])
@@ -234,7 +234,7 @@ class AgentBrain():
         for item in path:
             row, col = item.split(',')
             new_state = WumpusNode(int(row), int(col), self.world)
-            self.state.add_state(new_state)
+            self.state.addState(new_state)
 
             if str(direction.name) == str(Action.UP.name):
                 if item == current_node.right:

@@ -214,7 +214,7 @@ class Board:
             self.graphic.canvas.delete(self.objects[arrow_loc[0]][arrow_loc[1]])
             self.objects[arrow_loc[0]][arrow_loc[1]] = None
 
-            adj = self.world.get_Adjacents(arrow_loc[0], arrow_loc[1])
+            adj = self.world.getAdjacents(arrow_loc[0], arrow_loc[1])
             for a in adj:
                 if not self.world.listTiles[a[0]][a[1]].getStench():
                     self.graphic.canvas.delete(self.warnings[a[0]][a[1]][1])

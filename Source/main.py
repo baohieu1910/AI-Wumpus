@@ -9,7 +9,7 @@ if __name__ == "__main__":
     state = menu.run()
     map = int(state[-1])
 
-    wumpus_world.read_Map(MAP_LIST[map - 1])
+    wumpus_world.readMap(MAP_LIST[map - 1])
     board = Board(wumpus_world)
     board.createWorld()
     board.run()

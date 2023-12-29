@@ -3,14 +3,14 @@ class WumpusNode():
         self.name = str(row) + ',' + str(col)
         self.row = row
         self.col = col
-        adjacents = world.get_Adjacents(row,col)
+        self.adjacents = world.getAdjacents(row, col)
 
         self.up = ''
         self.left = ''
         self.down = ''
         self.right = ''
 
-        for adjacent in adjacents:
+        for adjacent in self.adjacents:
             if adjacent[0] == row - 1:
                 self.up = str(adjacent[0]) + ',' + str(adjacent[1])
             elif adjacent[0] == row + 1:

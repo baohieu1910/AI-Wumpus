@@ -7,12 +7,12 @@ class WumpusWorld:
         """Initialize an empty board"""
         self.height = 0
         self.width = 0
-        self.__numGold = 0
-        self.__numWumpus = 0
+        self.numGold = 0
+        self.numWumpus = 0
         self.listTiles = []
         self.doorPos = None
 
-    def get_Adjacents(self, i, j):
+    def getAdjacents(self, i, j):
         adj = []
         if i - 1 >= 0:
             adj.append((i - 1, j))
@@ -24,7 +24,7 @@ class WumpusWorld:
             adj.append((i, j + 1))
         return adj
 
-    def read_Map(self, filename):
+    def readMap(self, filename):
         try:
             with open(filename, 'r') as f:
                 lines = f.read().splitlines()
@@ -51,16 +51,16 @@ class WumpusWorld:
                             self.doorPos = (i, j)
                         if 'G' in tiles[i][j]:
                             (self.listTiles[i][j]).setGold()
-                            self.__numGold += 1
+                            self.numGold += 1
                         if 'P' in tiles[i][j]:
                             (self.listTiles[i][j]).setPit()
-                            adj = self.get_Adjacents(i, j)
+                            adj = self.getAdjacents(i, j)
                             for a in adj:
                                 (self.listTiles[a[0]][a[1]]).setBreeze()
                         if 'W' in tiles[i][j]:
                             (self.listTiles[i][j]).setWumpus()
-                            self.__numWumpus += 1
-                            adj = self.get_Adjacents(i, j)
+                            self.numWumpus += 1
+                            adj = self.getAdjacents(i, j)
                             for a in adj:
                                 (self.listTiles[a[0]][a[1]]).setStench()
 
@@ -68,13 +68,13 @@ class WumpusWorld:
             return None
 
     def grabGold(self, i, j):
-        self.__numGold -= 1
+        self.numGold -= 1
         self.listTiles[i][j].removeGold()
 
     def killWumpus(self, i, j):
-        self.__numWumpus -= 1
+        self.numWumpus -= 1
         self.listTiles[i][j].removeWumpus()
-        adj = self.get_Adjacents(i, j)
+        adj = self.getAdjacents(i, j)
         for a in adj:
             if self.listTiles[a[0]][a[1]].getStench():
                 self.listTiles[a[0]][a[1]].removeStench()
@@ -84,7 +84,7 @@ class WumpusWorld:
         self.listTiles[after_i][after_j].setPlayer()
 
     def leftGold(self):
-        return bool(self.__numGold)
+        return bool(self.numGold)
 
     def leftWumpus(self):
-        return bool(self.__numWumpus)
+        return bool(self.numWumpus)

@@ -6,7 +6,7 @@ class GameState:
         self.safeUnvisited = []
         self.state = dict()
 
-    def add_state(self,node):
+    def addState(self, node):
         if node.left == '':
             node.left = 'Wall'
         if node.right == '':
