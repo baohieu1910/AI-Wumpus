@@ -3,10 +3,8 @@ import World
 class GameState:
     def __init__(self,world):
         self.visited = []
-        self.unvisited_safe = []
+        self.safeUnvisited = []
         self.state = dict()
-        self.max_row= world.height
-        self.max_col = world.width
 
     def add_state(self,node):
         if node.left == '':

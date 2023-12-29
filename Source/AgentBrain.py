@@ -25,21 +25,21 @@ class AgentBrain():
         currNode = self.state.state[self.agent.currPos]
         locTile = self.world.listTiles[currNode.row][currNode.col]
 
-        if currNode.name in self.state.unvisited_safe:
-            self.state.unvisited_safe.remove(currNode.name)
+        if currNode.name in self.state.safeUnvisited:
+            self.state.safeUnvisited.remove(currNode.name)
 
         if self.scream == True:
             if self.agent.currDirection == Action.UP:
-                self.state.unvisited_safe.append(currNode.up)
+                self.state.safeUnvisited.append(currNode.up)
                 self.clearKB(currNode.up)
             elif self.agent.currDirection == Action.LEFT:
-                self.state.unvisited_safe.append(currNode.left)
+                self.state.safeUnvisited.append(currNode.left)
                 self.clearKB(currNode.left)
             elif self.agent.currDirection == Action.DOWN:
-                self.state.unvisited_safe.append(currNode.down)
+                self.state.safeUnvisited.append(currNode.down)
                 self.clearKB(currNode.down)
             elif self.agent.currDirection == Action.RIGHT:
-                self.state.unvisited_safe.append(currNode.right)
+                self.state.safeUnvisited.append(currNode.right)
                 self.clearKB(currNode.right)
             self.scream = False
 
@@ -70,8 +70,8 @@ class AgentBrain():
             if locTile.getGold():
                 return Action.GRAB
             if not self.killedWumpus:
-                if len(self.state.unvisited_safe) > 0:
-                    search = Search(self.state.state, self.agent.currPos, self.state.unvisited_safe[-1:],
+                if len(self.state.safeUnvisited) > 0:
+                    search = Search(self.state.state, self.agent.currPos, self.state.safeUnvisited[-1:],
                                     self.state.visited, self.agent.currDirection)
                     costPath = search.unicost()
                     self.move = self.moveList(costPath)
@@ -151,18 +151,18 @@ class AgentBrain():
 
 
     def addSafeNode(self, current_node):
-        if current_node.up != 'Wall' and current_node.up not in self.state.visited and current_node.up not in self.state.unvisited_safe:
+        if current_node.up != 'Wall' and current_node.up not in self.state.visited and current_node.up not in self.state.safeUnvisited:
             if self.KB.check(['W' + current_node.up]) and self.KB.check(['P' + current_node.up]):
-                self.state.unvisited_safe.append(current_node.up)
-        if current_node.left != 'Wall' and current_node.left not in self.state.visited and current_node.left not in self.state.unvisited_safe:
+                self.state.safeUnvisited.append(current_node.up)
+        if current_node.left != 'Wall' and current_node.left not in self.state.visited and current_node.left not in self.state.safeUnvisited:
             if self.KB.check(['W' + current_node.left]) and self.KB.check(['P' + current_node.left]):
-                self.state.unvisited_safe.append(current_node.left)
-        if current_node.down != 'Wall' and current_node.down not in self.state.visited and current_node.down not in self.state.unvisited_safe:
+                self.state.safeUnvisited.append(current_node.left)
+        if current_node.down != 'Wall' and current_node.down not in self.state.visited and current_node.down not in self.state.safeUnvisited:
             if self.KB.check(['W' + current_node.down]) and self.KB.check(['P' + current_node.down]):
-                self.state.unvisited_safe.append(current_node.down)
-        if current_node.right != 'Wall' and current_node.right not in self.state.visited and current_node.right not in self.state.unvisited_safe:
+                self.state.safeUnvisited.append(current_node.down)
+        if current_node.right != 'Wall' and current_node.right not in self.state.visited and current_node.right not in self.state.safeUnvisited:
             if self.KB.check(['W' + current_node.right]) and self.KB.check(['P' + current_node.right]):
-                self.state.unvisited_safe.append(current_node.right)
+                self.state.safeUnvisited.append(current_node.right)
 
     def killWumpus(self, direction):
         self.killedWumpus = True

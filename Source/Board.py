@@ -31,7 +31,6 @@ class Board:
         self.warnings = []
         self.terrains = []
         self.player = None
-        self.display_score = None
         # Game state
         self.gameState = NOT_RUNNING
 
@@ -43,10 +42,10 @@ class Board:
 
     def createWorld(self):
         for i in range(self.world.height):
-            tiles_line = []
+            tilesRow = []
             for j in range(self.world.width):
-                tiles_line.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.TILE, anchor=NW))
-            self.tiles.append(tiles_line)
+                tilesRow.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.TILE, anchor=NW))
+            self.tiles.append(tilesRow)
 
         self.graphic.canvas.delete(self.tiles[self.world.doorPos[0]][self.world.doorPos[1]])
         self.tiles[self.world.doorPos[0]][self.world.doorPos[1]] = self.graphic.canvas.create_image(
