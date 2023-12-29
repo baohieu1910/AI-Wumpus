@@ -2,26 +2,26 @@ import pygame
 import enum
 
 # Path
-DOOR = '../Assets/door.png'
-TILE = '../Assets/floor.png'
-GOLD_TILE = '../Assets/floor_gold.png'
-WUMPUS = '../Assets/wumpus.png'
-GOLD = '../Assets/gold.png'
-PIT = '../Assets/pit.png'
-TERRAIN ='../Assets/terrain.png'
-BREEZE = '../Assets/breeze.png'
-STENCH = '../Assets/stench.png'
+DOOR = '../Assets/Images/door.png'
+TILE = '../Assets/Images/floor.png'
+GOLD_TILE = '../Assets/Images/floor_gold.png'
+WUMPUS = '../Assets/Images/wumpus.png'
+GOLD = '../Assets/Images/gold.png'
+PIT = '../Assets/Images/pit.png'
+TERRAIN = '../Assets/Images/terrain.png'
+BREEZE = '../Assets/Images/breeze.png'
+STENCH = '../Assets/Images/stench.png'
 
-PLAYER_DOWN ='../Assets/agent_down.png'
-PLAYER_UP ='../Assets/agent_up.png'
-PLAYER_LEFT ='../Assets/agent_left.png'
-PLAYER_RIGHT ='../Assets/agent_right.png'
+PLAYER_DOWN = '../Assets/Images/agent_down.png'
+PLAYER_UP = '../Assets/Images/agent_up.png'
+PLAYER_LEFT = '../Assets/Images/agent_left.png'
+PLAYER_RIGHT = '../Assets/Images/agent_right.png'
 
-ARROW_DOWN ='../Assets/arrow_down.png'
-ARROW_UP ='../Assets/arrow_up.png'
-ARROW_LEFT ='../Assets/arrow_left.png'
-ARROW_RIGHT ='../Assets/arrow_right.png'
-SCORE ='../Assets/score_icon.png'
+ARROW_DOWN = '../Assets/Images/arrow_down.png'
+ARROW_UP = '../Assets/Images/arrow_up.png'
+ARROW_LEFT = '../Assets/Images/arrow_left.png'
+ARROW_RIGHT = '../Assets/Images/arrow_right.png'
+SCORE = '../Assets/Images/score_icon.png'
 
 # Window
 SCREEN_WIDTH = 970

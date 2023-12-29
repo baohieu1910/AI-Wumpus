@@ -10,7 +10,7 @@ class Menu():
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption(CAPTION)
         self.font = pygame.font.Font(FONT_MRSMONSTER, 30)
-        self.bg = pygame.image.load('../Assets/bg.jpg').convert()
+        self.bg = pygame.image.load('../Assets/Images/bg.jpg').convert()
         self.bg = pygame.transform.scale(self.bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
         self.state = HOME
 
