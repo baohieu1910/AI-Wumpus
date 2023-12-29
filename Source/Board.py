@@ -52,61 +52,61 @@ class Board:
             64 * self.world.doorPos[1], 64 * self.world.doorPos[0], image=self.graphic.DOOR, anchor=NW)
 
         for i in range(self.world.height):
-            objects_line = []
+            cellRows = []
             for j in range(self.world.width):
-                tile_at_loc = self.world.listTiles[i][j]
-                if tile_at_loc.getPit():
-                    objects_line.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.PIT, anchor=NW))
-                elif tile_at_loc.getWumpus():
-                    objects_line.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.WUMPUS, anchor=NW))
-                elif tile_at_loc.getGold():
+                locOfCell = self.world.listTiles[i][j]
+                if locOfCell.getPit():
+                    cellRows.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.PIT, anchor=NW))
+                elif locOfCell.getWumpus():
+                    cellRows.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.WUMPUS, anchor=NW))
+                elif locOfCell.getGold():
                     self.graphic.canvas.delete(self.tiles[i][j])
                     self.tiles[i][j] = self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.GOLD_TILE, anchor=NW)
-                    objects_line.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.GOLD, anchor=NW))
+                    cellRows.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.GOLD, anchor=NW))
                 else:
-                    objects_line.append(None)
-            self.objects.append(objects_line)
+                    cellRows.append(None)
+            self.objects.append(cellRows)
 
         for i in range(self.world.height):
-            warnings_line = []
+            warningRows = []
             for j in range(self.world.width):
-                warning_at_loc = []
-                tile_at_loc = self.world.listTiles[i][j]
-                if tile_at_loc.getBreeze():
-                    warning_at_loc.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.BREEZE, anchor=NW))
+                locOfWarning = []
+                locOfCell = self.world.listTiles[i][j]
+                if locOfCell.getBreeze():
+                    locOfWarning.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.BREEZE, anchor=NW))
                 else:
-                    warning_at_loc.append(None)
-                if tile_at_loc.getStench():
-                    warning_at_loc.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.STENCH, anchor=NW))
+                    locOfWarning.append(None)
+                if locOfCell.getStench():
+                    locOfWarning.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.STENCH, anchor=NW))
                 else:
-                    warning_at_loc.append(None)
-                if not tile_at_loc.getBreeze() and not tile_at_loc.getStench():
-                    warnings_line.append(None)
+                    locOfWarning.append(None)
+                if not locOfCell.getBreeze() and not locOfCell.getStench():
+                    warningRows.append(None)
                 else:
-                    warnings_line.append(warning_at_loc)
-            self.warnings.append(warnings_line)
+                    warningRows.append(locOfWarning)
+            self.warnings.append(warningRows)
 
         for i in range(self.world.height):
-            terrains_line = []
+            terrainRows = []
             for j in range(self.world.width):
-                tile_at_loc = self.world.listTiles[i][j]
-                if tile_at_loc.getPlayer():
+                locOfCell = self.world.listTiles[i][j]
+                if locOfCell.getPlayer():
                     self.player = self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.PLAYER_RIGHT, anchor=NW)
                     self.agentPos = (i, j)
-                    terrains_line.append(None)
+                    terrainRows.append(None)
                 else:
-                    terrains_line.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.TERRAIN, anchor=NW))
-            self.terrains.append(terrains_line)
+                    terrainRows.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.TERRAIN, anchor=NW))
+            self.terrains.append(terrainRows)
 
         # Init PL agent
-        starting_node = WumpusNode(self.agentPos[0], self.agentPos[1], self.world)
-        self.agent = AgentBrain(self.world, starting_node)
+        initNode = WumpusNode(self.agentPos[0], self.agentPos[1], self.world)
+        self.agent = AgentBrain(self.world, initNode)
 
         self.graphic.canvas.create_rectangle(0, 64 * self.world.height, 64 * self.world.width,
                                              64 * self.world.height + 64, fill='#85888a')
         self.graphic.canvas.create_image(64, 64 * self.world.height + 16, image=self.graphic.SCORE, anchor=NW)
-        self.score_display = self.graphic.canvas.create_text(64 + 64, 64 * self.world.height + 16, fill='#ffff00',
-                                                             font=self.scoreFont, text=str(self.score), anchor=NW)
+        self.graphic.displayScore = self.graphic.canvas.create_text(64 + 64, 64 * self.world.height + 16, fill='#ffff00',
+                                                            font=self.scoreFont, text=str(self.score), anchor=NW)
 
         # Output frame
         self.buttonStep = Button(self.graphic.outputFrame, text='STEP', height=2, width=30,
@@ -158,18 +158,18 @@ class Board:
             self.agent.currentState = action
 
             self.score -= 10
-            self.graphic.canvas.itemconfig(self.score_display, text=str(self.score))
+            self.graphic.canvas.itemconfig(self.graphic.displayScore, text=str(self.score))
 
             tile_at_loc = self.world.listTiles[self.agentPos[0]][self.agentPos[1]]
             if tile_at_loc.getPit():
                 self.score -= 10000
-                self.graphic.canvas.itemconfig(self.score_display, text=str(self.score))
+                self.graphic.canvas.itemconfig(self.graphic.displayScore, text=str(self.score))
                 self.graphic.canvas.update()
                 time.sleep(0.5)
                 self.endGame("Pit")
             elif tile_at_loc.getWumpus():
                 self.score -= 10000
-                self.graphic.canvas.itemconfig(self.score_display, text=str(self.score))
+                self.graphic.canvas.itemconfig(self.graphic.displayScore, text=str(self.score))
                 self.graphic.canvas.update()
                 time.sleep(0.5)
                 self.endGame("Wumpus")
@@ -199,7 +199,7 @@ class Board:
         self.graphic.canvas.delete(arrow)
 
         self.score -= 100
-        self.graphic.canvas.itemconfig(self.score_display, text=str(self.score))
+        self.graphic.canvas.itemconfig(self.graphic.displayScore, text=str(self.score))
 
         if self.world.listTiles[arrow_loc[0]][arrow_loc[1]].getWumpus():
             self.agent.scream = True
@@ -228,7 +228,7 @@ class Board:
     def grabGold(self):
         if self.world.listTiles[self.agentPos[0]][self.agentPos[1]].getGold():
             self.score += 100
-            self.graphic.canvas.itemconfig(self.score_display, text=str(self.score))
+            self.graphic.canvas.itemconfig(self.graphic.displayScore, text=str(self.score))
 
             # UPDATE WORLD
             self.world.grabGold(self.agentPos[0], self.agentPos[1])
@@ -331,7 +331,7 @@ class Board:
                     self.actionArea.see(END)
                     if self.agentPos == self.world.doorPos:
                         self.score += 10
-                        self.graphic.canvas.itemconfig(self.score_display, text=str(self.score))
+                        self.graphic.canvas.itemconfig(self.graphic.displayScore, text=str(self.score))
                         self.endGame("Climb")
 
                 # self.senseObject()
@@ -391,7 +391,7 @@ class Board:
                     self.actionArea.see(END)
                     if self.agentPos == self.world.doorPos:
                         self.score += 10
-                        self.graphic.canvas.itemconfig(self.score_display, text=str(self.score))
+                        self.graphic.canvas.itemconfig(self.graphic.displayScore, text=str(self.score))
                         self.endGame("Climb")
 
                 # self.senseObject()

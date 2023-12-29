@@ -12,6 +12,7 @@ class Graphics:
 
         self.canvas.pack(side="left", fill="both", expand=True)
         self.outputFrame.pack(side="right", fill="both", expand=False)
+        self.displayScore = None
         self.DOOR = PhotoImage(file=DOOR)
         self.TILE = PhotoImage(file=TILE)
         self.GOLD_TILE = PhotoImage(file=GOLD_TILE)
