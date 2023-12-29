@@ -18,3 +18,19 @@ class Agent:
             self.current_state = state[self.current_state].down
         elif self.current_direction == Action.RIGHT and state[self.current_state].right != 'Wall':
             self.current_state = state[self.current_state].right
+    def getAction(self, key):
+        if key == 'w':
+            return Action.UP
+        if key == 'a':
+            return Action.LEFT
+        if key == 's':
+            return Action.DOWN
+        if key == 'd':
+            return Action.RIGHT
+        if key == 'f':
+            return Action.SHOOT
+        if key == 'g':
+            return Action.GRAB
+        if key == 'c':
+            return Action.CLIMB
+        return None

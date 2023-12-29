@@ -1,4 +1,4 @@
-import World, Tile, Controller
+import World, Tile
 from tkinter import *
 from tkinter import font
 from tkinter import scrolledtext
