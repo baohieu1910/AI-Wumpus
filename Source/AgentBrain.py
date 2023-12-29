@@ -22,23 +22,23 @@ class AgentBrain(Agent):
         self.scream = False
 
     def getAction(self):
-        current_node = self.state.state[self.agent.current_state]
+        current_node = self.state.state[self.agent.currPos]
         tile_at_loc = self.world.listTiles[current_node.row][current_node.col]
 
         if current_node.name in self.state.unvisited_safe:
             self.state.unvisited_safe.remove(current_node.name)
 
         if self.scream == True:
-            if self.agent.current_direction == Action.UP:
+            if self.agent.currDirection == Action.UP:
                 self.state.unvisited_safe.append(current_node.up)
                 self.clearKB(current_node.up)
-            elif self.agent.current_direction == Action.LEFT:
+            elif self.agent.currDirection == Action.LEFT:
                 self.state.unvisited_safe.append(current_node.left)
                 self.clearKB(current_node.left)
-            elif self.agent.current_direction == Action.DOWN:
+            elif self.agent.currDirection == Action.DOWN:
                 self.state.unvisited_safe.append(current_node.down)
                 self.clearKB(current_node.down)
-            elif self.agent.current_direction == Action.RIGHT:
+            elif self.agent.currDirection == Action.RIGHT:
                 self.state.unvisited_safe.append(current_node.right)
                 self.clearKB(current_node.right)
             self.scream = False
@@ -67,14 +67,14 @@ class AgentBrain(Agent):
                 return Action.GRAB
             if not self.killing_wumpus:
                 if len(self.state.unvisited_safe) > 0:
-                    search = Search(self.state.state, self.agent.current_state, self.state.unvisited_safe[-1:],
-                                    self.state.visited, self.agent.current_direction)
+                    search = Search(self.state.state, self.agent.currPos, self.state.unvisited_safe[-1:],
+                                    self.state.visited, self.agent.currDirection)
                     cost_path = search.unicost()
                     self.move = self.move_list(cost_path)
                 else:
                     self.exit = True
-                    search = Search(self.state.state, self.agent.current_state, self.starting_node.name,
-                                    self.state.visited, self.agent.current_direction)
+                    search = Search(self.state.state, self.agent.currPos, self.starting_node.name,
+                                    self.state.visited, self.agent.currDirection)
                     cost_path = search.unicost()
                     self.move = self.move_list(cost_path)
 
@@ -194,37 +194,37 @@ class AgentBrain(Agent):
         self.killing_wumpus = True
         self.move = []
         if direction == 'Up':
-            if self.agent.current_direction == Action.UP:
+            if self.agent.currDirection == Action.UP:
                 self.move.insert(0, Action.SHOOT)
-            elif self.agent.current_direction != Action.UP:
-                self.agent.current_direction = Action.UP
+            elif self.agent.currDirection != Action.UP:
+                self.agent.currDirection = Action.UP
                 self.move.insert(0, Action.SHOOT)
                 self.move.insert(0, Action.UP)
         elif direction == 'Left':
-            if self.agent.current_direction == Action.LEFT:
+            if self.agent.currDirection == Action.LEFT:
                 self.move.insert(0, Action.SHOOT)
-            elif self.agent.current_direction != Action.LEFT:
-                self.agent.current_direction = Action.LEFT
+            elif self.agent.currDirection != Action.LEFT:
+                self.agent.currDirection = Action.LEFT
                 self.move.insert(0, Action.SHOOT)
                 self.move.insert(0, Action.LEFT)
         elif direction == 'Down':
-            if self.agent.current_direction == Action.DOWN:
+            if self.agent.currDirection == Action.DOWN:
                 self.move.insert(0, Action.SHOOT)
-            elif self.agent.current_direction != Action.DOWN:
-                self.agent.current_direction = Action.DOWN
+            elif self.agent.currDirection != Action.DOWN:
+                self.agent.currDirection = Action.DOWN
                 self.move.insert(0, Action.SHOOT)
                 self.move.insert(0, Action.DOWN)
         elif direction == 'Right':
-            if self.agent.current_direction == Action.RIGHT:
+            if self.agent.currDirection == Action.RIGHT:
                 self.move.insert(0, Action.SHOOT)
-            elif self.agent.current_direction != Action.RIGHT:
-                self.agent.current_direction = Action.RIGHT
+            elif self.agent.currDirection != Action.RIGHT:
+                self.agent.currDirection = Action.RIGHT
                 self.move.insert(0, Action.SHOOT)
                 self.move.insert(0, Action.RIGHT)
 
     def move_list(self, path):
-        direction = self.agent.current_direction
-        state = self.agent.current_state
+        direction = self.agent.currDirection
+        state = self.agent.currPos
         current_node = self.state.state[state]
         move_list = []
         for item in path:
@@ -311,8 +311,8 @@ class AgentBrain(Agent):
 
         if self.exit:
             move_list.append(Action.CLIMB)
-        if self.agent.current_direction != move_list[0]:
-            self.agent.current_direction = move_list[0]
+        if self.agent.currDirection != move_list[0]:
+            self.agent.currDirection = move_list[0]
         else:
-            self.agent.move_foward(self.state.state)
+            self.agent.moveFoward(self.state.state)
         return move_list

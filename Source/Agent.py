@@ -1,20 +1,20 @@
 from Search import *
 
 class Agent:
-    def __init__(self, state):
-        self.current_state = state
-        self.current_direction = Action.RIGHT
-        self.has_gold = False
-        self.has_killed_wumpus = False
-        self.is_leaving = False
+    def __init__(self, pos):
+        self.currPos = pos
+        self.currDirection = Action.RIGHT
+        self.hasGold = False
+        self.killedWumpus = False
+        self.leaving = False
 
     # Check wall and move forward
-    def move_foward(self, state):
-        if self.current_direction == Action.UP and state[self.current_state].up != 'Wall':
-            self.current_state = state[self.current_state].up
-        elif self.current_direction == Action.LEFT and state[self.current_state].left != 'Wall':
-            self.current_state = state[self.current_state].left
-        elif self.current_direction == Action.DOWN and state[self.current_state].down != 'Wall':
-            self.current_state = state[self.current_state].down
-        elif self.current_direction == Action.RIGHT and state[self.current_state].right != 'Wall':
-            self.current_state = state[self.current_state].right
+    def moveFoward(self, state):
+        if self.currDirection == Action.UP and state[self.currPos].up != 'Wall':
+            self.currPos = state[self.currPos].up
+        elif self.currDirection == Action.LEFT and state[self.currPos].left != 'Wall':
+            self.currPos = state[self.currPos].left
+        elif self.currDirection == Action.DOWN and state[self.currPos].down != 'Wall':
+            self.currPos = state[self.currPos].down
+        elif self.currDirection == Action.RIGHT and state[self.currPos].right != 'Wall':
+            self.currPos = state[self.currPos].right
