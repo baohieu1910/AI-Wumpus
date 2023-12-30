@@ -18,7 +18,7 @@ class AgentBrain():
         self.initNode = initNode
         self.world = world
         self.currentState = Action.RIGHT
-        self.killedWumpus = False
+        self.killingWumpus = False
         self.scream = False
 
     def getAction(self):
@@ -52,7 +52,7 @@ class AgentBrain():
         if currNode.name == self.initNode.name and locTile.getBreeze():
             self.move.append(Action.CLIMB)
 
-        if not self.exit and not self.killedWumpus:
+        if not self.exit and not self.killingWumpus:
             stench = False
             breeze = False
             if locTile.getStench():
@@ -69,7 +69,7 @@ class AgentBrain():
             self.addSafeNode(currNode)
             if locTile.getGold():
                 return Action.GRAB
-            if not self.killedWumpus:
+            if not self.killingWumpus:
                 if len(self.state.safeUnvisited) > 0:
                     search = Search(self.state.state, self.agent.currPos, self.state.safeUnvisited[-1:],
                                     self.state.visited, self.agent.currDirection)
@@ -85,7 +85,7 @@ class AgentBrain():
         if self.move:
             move = self.move.pop(0)
             if move == Action.SHOOT:
-                self.killedWumpus = False
+                self.killingWumpus = False
             return move
 
     def clearKB(self, node):
@@ -165,7 +165,7 @@ class AgentBrain():
                 self.state.safeUnvisited.append(current_node.right)
 
     def killWumpus(self, direction):
-        self.killedWumpus = True
+        self.killingWumpus = True
         self.move = []
         if direction == 'Up':
             if self.agent.currDirection == Action.UP:
