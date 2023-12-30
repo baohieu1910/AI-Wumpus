@@ -11,5 +11,5 @@ if __name__ == "__main__":
     wumpus_world = WumpusWorld(MAP_LIST[map - 1])
     board = Board(wumpus_world)
     board.createWorld()
-    board.run()
+    board.runGame()
 
