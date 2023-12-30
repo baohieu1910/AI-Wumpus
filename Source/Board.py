@@ -20,7 +20,7 @@ class Board:
         self.buttonStep = None
         self.buttonRun = None
         self.buttonFont = font.Font(size=10)
-        self.scoreFont = font.Font(family='KacstBook', size=22)
+        self.scoreFont = font.Font(family='TimesNewRoman', size=22)
 
         self.runMode = -1
 
@@ -128,56 +128,58 @@ class Board:
         self.buttonRun.grid(row=0, column=1)
         self.actionArea.grid(row=1, column=0, columnspan=2)
 
-    ############################# ACTIONS #############################
-
     def validPos(self, pos):
         return pos[0] >= 0 and pos[0] <= self.world.row - 1 and pos[1] >= 0 and pos[1] <= self.world.col - 1
 
-    def moveForward(self, action):  # action: current action
-        nextPos = None
-        fixed_x = 0
-        fixed_y = 0
+    def update_score(self, penalty):
+        self.score -= penalty
+        self.graphic.canvas.itemconfig(self.graphic.displayScore, text=str(self.score))
 
+    def move_agent(self, x_change, y_change):
+        next_pos = (self.agentPos[0] + x_change, self.agentPos[1] + y_change)
+        fixed_x = y_change * 64
+        fixed_y = x_change * 64
+        return next_pos, fixed_x, fixed_y
+
+    def moveForward(self, action):
+        nextPos = None
+        x = 0
+        y = 0
         if action == Action.LEFT:
-            nextPos = (self.agentPos[0], self.agentPos[1] - 1)
-            fixed_x = -64
+            nextPos = self.move_agent(0, -1)[0]
+            x = self.move_agent(0, -1)[1]
         elif action == Action.RIGHT:
-            nextPos = (self.agentPos[0], self.agentPos[1] + 1)
-            fixed_x = 64
+            nextPos= self.move_agent(0, 1)[0]
+            x = self.move_agent(0, 1)[1]
+
         elif action == Action.UP:
-            nextPos = (self.agentPos[0] - 1, self.agentPos[1])
-            fixed_y = -64
+            nextPos = self.move_agent(-1, 0)[0]
+            y = self.move_agent(-1, 0)[2]
         elif action == Action.DOWN:
-            nextPos = (self.agentPos[0] + 1, self.agentPos[1])
-            fixed_y = 64
+            nextPos = self.move_agent(1, 0)[0]
+            y = self.move_agent(1, 0)[2]
 
         if self.validPos(nextPos):
             self.world.movePlayer(self.agentPos[0], self.agentPos[1], nextPos[0], nextPos[1])
             self.agentPos = nextPos
-
             if self.terrains[self.agentPos[0]][self.agentPos[1]]:
                 self.graphic.canvas.delete(self.terrains[self.agentPos[0]][self.agentPos[1]])
                 self.terrains[self.agentPos[0]][self.agentPos[1]] = None
-
-            self.graphic.canvas.move(self.player, fixed_x, fixed_y)
+            self.graphic.canvas.move(self.player, x, y)
             self.agent.currentState = action
 
-            self.score -= 10
+            self.update_score(10)
             self.graphic.canvas.itemconfig(self.graphic.displayScore, text=str(self.score))
 
             tile_at_loc = self.world.listTiles[self.agentPos[0]][self.agentPos[1]]
-            if tile_at_loc.getPit():
-                self.score -= 10000
+            if tile_at_loc.getPit() or tile_at_loc.getWumpus():
+                self.update_score(10000)
                 self.graphic.canvas.itemconfig(self.graphic.displayScore, text=str(self.score))
                 self.graphic.canvas.update()
                 time.sleep(0.5)
-                self.endGame("Pit")
-            elif tile_at_loc.getWumpus():
-                self.score -= 10000
-                self.graphic.canvas.itemconfig(self.graphic.displayScore, text=str(self.score))
-                self.graphic.canvas.update()
-                time.sleep(0.5)
-                self.endGame("Wumpus")
+                text = 'Pit' if tile_at_loc.getPit() else 'Wumpus'
+                self.endGame(text)
+
 
     def shootForward(self, direction):  # direction: current state
         arrow = None
