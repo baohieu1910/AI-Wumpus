@@ -40,17 +40,7 @@ class Board:
         # Score
         self.score = 0
 
-    def createWorld(self):
-        for i in range(self.world.row):
-            tilesRow = []
-            for j in range(self.world.col):
-                tilesRow.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.TILE, anchor=NW))
-            self.tiles.append(tilesRow)
-
-        self.graphic.canvas.delete(self.tiles[self.world.doorPos[0]][self.world.doorPos[1]])
-        self.tiles[self.world.doorPos[0]][self.world.doorPos[1]] = self.graphic.canvas.create_image(
-            64 * self.world.doorPos[1], 64 * self.world.doorPos[0], image=self.graphic.DOOR, anchor=NW)
-
+    def createCellRow(self):
         for i in range(self.world.row):
             cellRows = []
             for j in range(self.world.col):
@@ -67,6 +57,7 @@ class Board:
                     cellRows.append(None)
             self.objects.append(cellRows)
 
+    def createWarningRow(self):
         for i in range(self.world.row):
             warningRows = []
             for j in range(self.world.col):
@@ -86,6 +77,7 @@ class Board:
                     warningRows.append(locOfWarning)
             self.warnings.append(warningRows)
 
+    def createTerrainRow(self):
         for i in range(self.world.row):
             terrainRows = []
             for j in range(self.world.col):
@@ -97,8 +89,21 @@ class Board:
                 else:
                     terrainRows.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.TERRAIN, anchor=NW))
             self.terrains.append(terrainRows)
+    def createWorld(self):
+        for i in range(self.world.row):
+            tilesRow = []
+            for j in range(self.world.col):
+                tilesRow.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.TILE, anchor=NW))
+            self.tiles.append(tilesRow)
 
-        # Init PL agent
+        self.graphic.canvas.delete(self.tiles[self.world.doorPos[0]][self.world.doorPos[1]])
+        self.tiles[self.world.doorPos[0]][self.world.doorPos[1]] = self.graphic.canvas.create_image(
+            64 * self.world.doorPos[1], 64 * self.world.doorPos[0], image=self.graphic.DOOR, anchor=NW)
+
+        self.createCellRow()
+        self.createWarningRow()
+        self.createTerrainRow()
+
         initNode = WumpusNode(self.agentPos[0], self.agentPos[1], self.world)
         self.agent = AgentBrain(self.world, initNode)
 
