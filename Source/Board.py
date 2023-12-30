@@ -89,7 +89,7 @@ class Board:
                 else:
                     terrainRows.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.TERRAIN, anchor=NW))
             self.terrains.append(terrainRows)
-    def createWorld(self):
+    def drawWorld(self):
         for i in range(self.world.row):
             tilesRow = []
             for j in range(self.world.col):
