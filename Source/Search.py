@@ -42,7 +42,7 @@ class Search:
                 for item in [Action.RIGHT, Action.UP, Action.LEFT, Action.DOWN]:
                     if item == Action.RIGHT:
                         if self.graph[current[2]].right in self.visited_states or self.graph[
-                            current[2]].right in self.goals:
+                        current[2]].right in self.goals:
                             path = current[3] + [self.graph[current[2]].right]
                             cost = self.movementCost(current[1], Action.RIGHT) + current[0]
                             heapq.heappush(frontier,(cost, Action.RIGHT.name, self.graph[current[2]].right, path))
