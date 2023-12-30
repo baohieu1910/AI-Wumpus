@@ -41,9 +41,9 @@ class Board:
         self.score = 0
 
     def createWorld(self):
-        for i in range(self.world.height):
+        for i in range(self.world.row):
             tilesRow = []
-            for j in range(self.world.width):
+            for j in range(self.world.col):
                 tilesRow.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.TILE, anchor=NW))
             self.tiles.append(tilesRow)
 
@@ -51,9 +51,9 @@ class Board:
         self.tiles[self.world.doorPos[0]][self.world.doorPos[1]] = self.graphic.canvas.create_image(
             64 * self.world.doorPos[1], 64 * self.world.doorPos[0], image=self.graphic.DOOR, anchor=NW)
 
-        for i in range(self.world.height):
+        for i in range(self.world.row):
             cellRows = []
-            for j in range(self.world.width):
+            for j in range(self.world.col):
                 locOfCell = self.world.listTiles[i][j]
                 if locOfCell.getPit():
                     cellRows.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.PIT, anchor=NW))
@@ -67,9 +67,9 @@ class Board:
                     cellRows.append(None)
             self.objects.append(cellRows)
 
-        for i in range(self.world.height):
+        for i in range(self.world.row):
             warningRows = []
-            for j in range(self.world.width):
+            for j in range(self.world.col):
                 locOfWarning = []
                 locOfCell = self.world.listTiles[i][j]
                 if locOfCell.getBreeze():
@@ -86,9 +86,9 @@ class Board:
                     warningRows.append(locOfWarning)
             self.warnings.append(warningRows)
 
-        for i in range(self.world.height):
+        for i in range(self.world.row):
             terrainRows = []
-            for j in range(self.world.width):
+            for j in range(self.world.col):
                 locOfCell = self.world.listTiles[i][j]
                 if locOfCell.getPlayer():
                     self.player = self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.PLAYER_RIGHT, anchor=NW)
@@ -102,11 +102,11 @@ class Board:
         initNode = WumpusNode(self.agentPos[0], self.agentPos[1], self.world)
         self.agent = AgentBrain(self.world, initNode)
 
-        self.graphic.canvas.create_rectangle(0, 64 * self.world.height, 64 * self.world.width,
-                                             64 * self.world.height + 64, fill='#85888a')
-        self.graphic.canvas.create_image(64, 64 * self.world.height + 16, image=self.graphic.SCORE, anchor=NW)
-        self.graphic.displayScore = self.graphic.canvas.create_text(64 + 64, 64 * self.world.height + 16, fill='#ffff00',
-                                                            font=self.scoreFont, text=str(self.score), anchor=NW)
+        self.graphic.canvas.create_rectangle(0, 64 * self.world.row, 64 * self.world.col,
+                                             64 * self.world.row + 64, fill='#85888a')
+        self.graphic.canvas.create_image(64, 64 * self.world.row + 16, image=self.graphic.SCORE, anchor=NW)
+        self.graphic.displayScore = self.graphic.canvas.create_text(64 + 64, 64 * self.world.row + 16, fill='#ffff00',
+                                                                    font=self.scoreFont, text=str(self.score), anchor=NW)
 
         # Output frame
         self.buttonStep = Button(self.graphic.outputFrame, text='STEP', height=2, width=30,
@@ -126,7 +126,7 @@ class Board:
     ############################# ACTIONS #############################
 
     def validPos(self, pos):
-        return pos[0] >= 0 and pos[0] <= self.world.height - 1 and pos[1] >= 0 and pos[1] <= self.world.width - 1
+        return pos[0] >= 0 and pos[0] <= self.world.row - 1 and pos[1] >= 0 and pos[1] <= self.world.col - 1
 
     def moveForward(self, action):  # action: current action
         nextPos = None
@@ -259,8 +259,8 @@ class Board:
 
     def endGame(self, reason):
         self.gameState = NOT_RUNNING
-        for i in range(self.world.height):
-            for j in range(self.world.width):
+        for i in range(self.world.row):
+            for j in range(self.world.col):
                 if self.terrains[i][j]:
                     self.graphic.canvas.delete(self.terrains[i][j])
         self.buttonRun['state'] = DISABLED

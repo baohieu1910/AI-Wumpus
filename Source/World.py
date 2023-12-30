@@ -5,8 +5,8 @@ from random import randrange
 class WumpusWorld:
     def __init__(self):
         """Initialize an empty board"""
-        self.height = 0
-        self.width = 0
+        self.row = 0
+        self.col = 0
         self.numGold = 0
         self.numWumpus = 0
         self.listTiles = []
@@ -16,11 +16,11 @@ class WumpusWorld:
         adj = []
         if i - 1 >= 0:
             adj.append((i - 1, j))
-        if i + 1 <= self.height - 1:
+        if i + 1 <= self.row - 1:
             adj.append((i + 1, j))
         if j - 1 >= 0:
             adj.append((i, j - 1))
-        if j + 1 <= self.width - 1:
+        if j + 1 <= self.col - 1:
             adj.append((i, j + 1))
         return adj
 
@@ -29,23 +29,23 @@ class WumpusWorld:
             with open(filename, 'r') as f:
                 lines = f.read().splitlines()
                 lines = lines[1:]
-                self.height = len(lines)
+                self.row = len(lines)
 
                 tiles = []
                 for line in lines:
                     tiles.append(line.split('.'))
-                self.width = len(tiles[0])
+                self.col = len(tiles[0])
 
                 # Empty tiles map
-                for i in range(self.height):
+                for i in range(self.row):
                     tile_line = []
-                    for j in range(self.width):
+                    for j in range(self.col):
                         tile_line.append(Tile())
                     self.listTiles.append(tile_line)
 
                 # Tile's objects
-                for i in range(self.height):
-                    for j in range(self.width):
+                for i in range(self.row):
+                    for j in range(self.col):
                         if 'A' in tiles[i][j]:
                             (self.listTiles[i][j]).setPlayer()
                             self.doorPos = (i, j)
