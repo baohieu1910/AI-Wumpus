@@ -65,6 +65,7 @@ class Board:
                 locOfCell = self.world.listTiles[i][j]
                 if locOfCell.getBreeze():
                     locOfWarning.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.BREEZE, anchor=NW))
+                    print((64 * j, 64 * i))
                 else:
                     locOfWarning.append(None)
                 if locOfCell.getStench():
@@ -89,7 +90,24 @@ class Board:
                 else:
                     terrainRows.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.TERRAIN, anchor=NW))
             self.terrains.append(terrainRows)
+
+    def drawNote(self):
+        notes = {self.graphic.GOLD: ": Gold",
+                 self.graphic.BREEZE: ": Breeze",
+                 self.graphic.PIT: ": Pit",
+                 self.graphic.STENCH: ": Stench",
+                 self.graphic.WUMPUS: ": Wumpus"}
+
+        self.graphic.canvas.create_text(64 * 11 + 32, 64 * 0 + 16, fill='#FF0000', font=self.scoreFont, text="Note", anchor=NW)
+        self.graphic.canvas.create_text(64 * 10, 64 * 0 + 16, fill='#FF0000', font=self.scoreFont, text="_________________", anchor=NW)
+
+        for i in range(len(notes)):
+            self.graphic.canvas.create_image(64 * 10 + 10, 64 * (i + 1), image=list(notes.keys())[i], anchor = NW)
+            self.graphic.canvas.create_text(64 * 11 + 10, 64 * (i + 1) + 16, font=self.scoreFont, text=list(notes.values())[i], anchor=NW)
+
     def drawWorld(self):
+        self.drawNote()
+
         for i in range(self.world.row):
             tilesRow = []
             for j in range(self.world.col):
