@@ -114,7 +114,7 @@ class Board:
                                                                     font=self.scoreFont, text=str(self.score), anchor=NW)
 
         # Output frame
-        self.buttonStep = Button(self.graphic.outputFrame, text='STEP', height=2, width=30,
+        self.buttonStep = Button(self.graphic.outputFrame, text='RUN BY STEP', height=2, width=30,
                                  command=lambda: self.changeRunMode(0))
         self.buttonRun = Button(self.graphic.outputFrame, text='RUN ALL', height=2, width=30,
                                 command=lambda: self.changeRunMode(1))
@@ -276,12 +276,12 @@ class Board:
     def senseObject(self):
         if self.world.listTiles[self.agentPos[0]][self.agentPos[1]].getStench() and \
                 self.world.listTiles[self.agentPos[0]][self.agentPos[1]].getBreeze():
-            self.actionArea.insert(END, 'SENSE: Stench, Breeze\n')
+            self.actionArea.insert(END, 'Warning: Stench, Breeze\n')
         else:
             if self.world.listTiles[self.agentPos[0]][self.agentPos[1]].getStench():
-                self.actionArea.insert(END, 'SENSE: Stench\n')
+                self.actionArea.insert(END, 'Warning: Stench\n')
             if self.world.listTiles[self.agentPos[0]][self.agentPos[1]].getBreeze():
-                self.actionArea.insert(END, 'SENSE: Breeze\n')
+                self.actionArea.insert(END, 'Warning: Breeze\n')
 
     def changeRunMode(self, key):
         self.runMode = key
@@ -293,44 +293,44 @@ class Board:
         action = self.agent.getAction()
         if action == Action.DOWN:
             if action == self.agent.currentState:
-                self.actionArea.insert(END, 'ACTION: Move forward\n')
+                self.actionArea.insert(END, 'Action: Move forward\n')
                 self.moveForward(action)
             else:
                 self.graphic.canvas.itemconfigure(self.player, image=self.graphic.PLAYER_DOWN)
-                self.actionArea.insert(END, 'ACTION: Face down\n')
+                self.actionArea.insert(END, 'Action: Face down\n')
                 self.agent.currentState = Action.DOWN
         elif action == Action.UP:
             if action == self.agent.currentState:
-                self.actionArea.insert(END, 'ACTION: Move forward\n')
+                self.actionArea.insert(END, 'Action: Move forward\n')
                 self.moveForward(action)
             else:
                 self.graphic.canvas.itemconfigure(self.player, image=self.graphic.PLAYER_UP)
-                self.actionArea.insert(END, 'ACTION: Face up\n')
+                self.actionArea.insert(END, 'Action: Face up\n')
                 self.agent.currentState = Action.UP
         elif action == Action.LEFT:
             if action == self.agent.currentState:
-                self.actionArea.insert(END, 'ACTION: Move forward\n')
+                self.actionArea.insert(END, 'Action: Move forward\n')
                 self.moveForward(action)
             else:
                 self.graphic.canvas.itemconfigure(self.player, image=self.graphic.PLAYER_LEFT)
-                self.actionArea.insert(END, 'ACTION: Face left\n')
+                self.actionArea.insert(END, 'Action: Face left\n')
                 self.agent.currentState = Action.LEFT
         elif action == Action.RIGHT:
             if action == self.agent.currentState:
-                self.actionArea.insert(END, 'ACTION: Move forward\n')
+                self.actionArea.insert(END, 'Action: Move forward\n')
                 self.moveForward(action)
             else:
                 self.graphic.canvas.itemconfigure(self.player, image=self.graphic.PLAYER_RIGHT)
-                self.actionArea.insert(END, 'ACTION: Face right\n')
+                self.actionArea.insert(END, 'Action: Face right\n')
                 self.agent.currentState = Action.RIGHT
         elif action == Action.SHOOT:
-            self.actionArea.insert(END, 'ACTION: Shoot arrow\n')
+            self.actionArea.insert(END, 'Action: Shoot arrow\n')
             self.shootForward(self.agent.currentState)
         elif action == Action.GRAB:
-            self.actionArea.insert(END, 'ACTION: Grab gold\n')
+            self.actionArea.insert(END, 'Action: Grab gold\n')
             self.grabGold()
         elif action == Action.CLIMB:
-            self.actionArea.insert(END, 'ACTION: Climb out\n')
+            self.actionArea.insert(END, 'Action: Climb out\n')
             self.actionArea.see(END)
             if self.agentPos == self.world.doorPos:
                 self.score += 10
