@@ -65,7 +65,6 @@ class Board:
                 locOfCell = self.world.listTiles[i][j]
                 if locOfCell.getBreeze():
                     locOfWarning.append(self.graphic.canvas.create_image(64 * j, 64 * i, image=self.graphic.BREEZE, anchor=NW))
-                    print((64 * j, 64 * i))
                 else:
                     locOfWarning.append(None)
                 if locOfCell.getStench():
