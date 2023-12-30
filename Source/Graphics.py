@@ -7,7 +7,7 @@ class Graphics:
         self.root.title("WUMPUS WORLD")
         self.root.geometry("+200+50")
 
-        self.canvas = Canvas(self.root, width=64 * world.col + 64 * 4, height=64 * world.row + 64, background='white')
+        self.canvas = Canvas(self.root, width=64 * world.col + NOTE_WIDTH, height=64 * world.row + 64, background='white')
         self.outputFrame = Frame(self.root)
 
         self.canvas.pack(side="left", fill="both", expand=True)

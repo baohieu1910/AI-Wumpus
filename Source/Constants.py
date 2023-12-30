@@ -27,6 +27,7 @@ SCORE = '../Assets/Images/score_icon.png'
 SCREEN_WIDTH = 970
 SCREEN_HEIGHT = 710
 CAPTION = 'Wumpus World'
+NOTE_WIDTH = 64 * 4
 
 # Map
 MAP_STATE_LIST = ['MAP_1', 'MAP_2', 'MAP_3', 'MAP_4', 'MAP_5']
