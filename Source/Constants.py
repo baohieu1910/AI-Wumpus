@@ -1,6 +1,8 @@
 import pygame
 import enum
 
+
+
 # Path
 DOOR = '../Assets/Images/door.png'
 TILE = '../Assets/Images/floor.png'

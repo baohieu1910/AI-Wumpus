@@ -4,7 +4,12 @@ from KB import KnowledgeBase
 from WumpusNode import WumpusNode
 from Search import *
 
-
+directions = {
+            Action.UP: 'up',
+            Action.LEFT: 'left',
+            Action.DOWN: 'down',
+            Action.RIGHT: 'right'
+        }
 class AgentBrain():
     def __init__(self, world, initNode):
         self.state = GameState(world)
@@ -28,20 +33,15 @@ class AgentBrain():
         if currNode.name in self.state.safeUnvisited:
             self.state.safeUnvisited.remove(currNode.name)
 
-        if self.scream == True:
-            if self.agent.currDirection == Action.UP:
-                self.state.safeUnvisited.append(currNode.up)
-                self.clearKB(currNode.up)
-            elif self.agent.currDirection == Action.LEFT:
-                self.state.safeUnvisited.append(currNode.left)
-                self.clearKB(currNode.left)
-            elif self.agent.currDirection == Action.DOWN:
-                self.state.safeUnvisited.append(currNode.down)
-                self.clearKB(currNode.down)
-            elif self.agent.currDirection == Action.RIGHT:
-                self.state.safeUnvisited.append(currNode.right)
-                self.clearKB(currNode.right)
-            self.scream = False
+        if self.scream:
+            direction = self.agent.currDirection
+            attribute = directions.get(direction)
+            if attribute:
+                adjacent_node_name = getattr(currNode, attribute, None)
+                if adjacent_node_name:
+                    self.state.safeUnvisited.append(adjacent_node_name)
+                    self.clearKB(adjacent_node_name)
+                self.scream = False
 
         for item in self.state.visited[-10:]:
             row, col = item.split(',')
@@ -53,32 +53,30 @@ class AgentBrain():
             self.move.append(Action.CLIMB)
 
         if not self.exit and not self.killingWumpus:
-            stench = False
-            breeze = False
-            if locTile.getStench():
-                stench = True
-                self.handleStench(currNode, stench)
+            stench = locTile.getStench()
+            breeze = locTile.getBreeze()
+
+            self.handleStench(currNode, stench)
+            if stench:
                 self.handleWumpus(currNode)
-            elif not locTile.getStench():
-                self.handleStench(currNode, stench)
-            if locTile.getBreeze():
-                breeze = True
-                self.handleBreeze(currNode, breeze)
-            elif not locTile.getBreeze():
-                self.handleBreeze(currNode, breeze)
+
+            self.handleBreeze(currNode, breeze)
+
             self.addSafeNode(currNode)
+
             if locTile.getGold():
                 return Action.GRAB
+
             if not self.killingWumpus:
                 if len(self.state.safeUnvisited) > 0:
                     search = Search(self.state.state, self.agent.currPos, self.state.safeUnvisited[-1:],
-                                    self.state.visited, self.agent.currDirection)
+                                        self.state.visited, self.agent.currDirection)
                     costPath = search.unicost()
                     self.move = self.moveList(costPath)
                 else:
                     self.exit = True
                     search = Search(self.state.state, self.agent.currPos, self.initNode.name,
-                                    self.state.visited, self.agent.currDirection)
+                                        self.state.visited, self.agent.currDirection)
                     costPath = search.unicost()
                     self.move = self.moveList(costPath)
 
@@ -98,103 +96,66 @@ class AgentBrain():
             self.KB.KB.remove(item)
 
     def handleBreeze(self, current_node, breeze):
-        if breeze == True:
-            sentence = []
+        if breeze:
+            adjacent_nodes = [current_node.up, current_node.left, current_node.down, current_node.right]
             prefix = 'P'
-            current_prefix = 'B'
-            if current_node.up not in self.state.visited and current_node.up != 'Wall':
-                sentence.append(prefix + current_node.up)
-            if current_node.left not in self.state.visited and current_node.left != 'Wall':
-                sentence.append(prefix + current_node.left)
-            if current_node.down not in self.state.visited and current_node.down != 'Wall':
-                sentence.append(prefix + current_node.down)
-            if current_node.right not in self.state.visited and current_node.right != 'Wall':
-                sentence.append(prefix + current_node.right)
+            sentence = [prefix + node for node in adjacent_nodes
+                        if node not in self.state.visited and node != 'Wall']
             self.KB.add(sentence)
-            self.KB.add([current_prefix + current_node.name])
+            self.KB.add(['B' + current_node.name])
         else:
             prefix = '~P'
-            if current_node.up not in self.state.visited and current_node.up != 'Wall':
-                self.KB.add([prefix + current_node.up])
-            if current_node.left not in self.state.visited and current_node.left != 'Wall':
-                self.KB.add([prefix + current_node.left])
-            if current_node.down not in self.state.visited and current_node.down != 'Wall':
-                self.KB.add([prefix + current_node.down])
-            if current_node.right not in self.state.visited and current_node.right != 'Wall':
-                self.KB.add([prefix + current_node.right])
+            for direction in directions.values():
+                node_name = getattr(current_node, direction, None)
+                if node_name not in self.state.visited and node_name != 'Wall':
+                    self.KB.add([prefix + node_name])
 
     def handleStench(self, current_node, stench):
-        if stench == True:
-            sentence = []
+        adjacent_nodes = [current_node.up, current_node.left, current_node.down, current_node.right]
+
+        if stench:
             prefix = 'W'
             current_prefix = 'S'
-            if current_node.up not in self.state.visited and current_node.up != 'Wall':
-                sentence.append(prefix + current_node.up)
-            if current_node.left not in self.state.visited and current_node.left != 'Wall':
-                sentence.append(prefix + current_node.left)
-            if current_node.down not in self.state.visited and current_node.down != 'Wall':
-                sentence.append(prefix + current_node.down)
-            if current_node.right not in self.state.visited and current_node.right != 'Wall':
-                sentence.append(prefix + current_node.right)
+            sentence = [prefix + node for node in adjacent_nodes
+                        if node not in self.state.visited and node != 'Wall']
             self.KB.add(sentence)
             self.KB.add([current_prefix + current_node.name])
         else:
             prefix = '~W'
-            if current_node.right not in self.state.visited and current_node.right != 'Wall':
-                self.KB.add([prefix + current_node.right])
-            if current_node.up not in self.state.visited and current_node.up != 'Wall':
-                self.KB.add([prefix + current_node.up])
-            if current_node.left not in self.state.visited and current_node.left != 'Wall':
-                self.KB.add([prefix + current_node.left])
-            if current_node.down not in self.state.visited and current_node.down != 'Wall':
-                self.KB.add([prefix + current_node.down])
+            for direction in directions.values():
+                node_name = getattr(current_node, direction, None)
+                if node_name not in self.state.visited and node_name != 'Wall':
+                    self.KB.add([prefix + node_name])
 
 
     def addSafeNode(self, current_node):
-        if current_node.up != 'Wall' and current_node.up not in self.state.visited and current_node.up not in self.state.safeUnvisited:
-            if self.KB.check(['W' + current_node.up]) and self.KB.check(['P' + current_node.up]):
-                self.state.safeUnvisited.append(current_node.up)
-        if current_node.left != 'Wall' and current_node.left not in self.state.visited and current_node.left not in self.state.safeUnvisited:
-            if self.KB.check(['W' + current_node.left]) and self.KB.check(['P' + current_node.left]):
-                self.state.safeUnvisited.append(current_node.left)
-        if current_node.down != 'Wall' and current_node.down not in self.state.visited and current_node.down not in self.state.safeUnvisited:
-            if self.KB.check(['W' + current_node.down]) and self.KB.check(['P' + current_node.down]):
-                self.state.safeUnvisited.append(current_node.down)
-        if current_node.right != 'Wall' and current_node.right not in self.state.visited and current_node.right not in self.state.safeUnvisited:
-            if self.KB.check(['W' + current_node.right]) and self.KB.check(['P' + current_node.right]):
-                self.state.safeUnvisited.append(current_node.right)
+        for direction in directions.values():
+            adjacent_node_name = getattr(current_node, direction, None)
+
+            if (
+                    adjacent_node_name != 'Wall' and
+                    adjacent_node_name not in self.state.visited and
+                    adjacent_node_name not in self.state.safeUnvisited and
+                    self.KB.check(['W' + adjacent_node_name]) and
+                    self.KB.check(['P' + adjacent_node_name])
+            ):
+                self.state.safeUnvisited.append(adjacent_node_name)
 
     def killWumpus(self, direction):
         self.killingWumpus = True
         self.move = []
-        if direction == 'Up':
-            if self.agent.currDirection == Action.UP:
-                self.move.insert(0, Action.SHOOT)
-            elif self.agent.currDirection != Action.UP:
-                self.agent.currDirection = Action.UP
-                self.move.insert(0, Action.SHOOT)
-                self.move.insert(0, Action.UP)
-        elif direction == 'Left':
-            if self.agent.currDirection == Action.LEFT:
-                self.move.insert(0, Action.SHOOT)
-            elif self.agent.currDirection != Action.LEFT:
-                self.agent.currDirection = Action.LEFT
-                self.move.insert(0, Action.SHOOT)
-                self.move.insert(0, Action.LEFT)
-        elif direction == 'Down':
-            if self.agent.currDirection == Action.DOWN:
-                self.move.insert(0, Action.SHOOT)
-            elif self.agent.currDirection != Action.DOWN:
-                self.agent.currDirection = Action.DOWN
-                self.move.insert(0, Action.SHOOT)
-                self.move.insert(0, Action.DOWN)
-        elif direction == 'Right':
-            if self.agent.currDirection == Action.RIGHT:
-                self.move.insert(0, Action.SHOOT)
-            elif self.agent.currDirection != Action.RIGHT:
-                self.agent.currDirection = Action.RIGHT
-                self.move.insert(0, Action.SHOOT)
-                self.move.insert(0, Action.RIGHT)
+        target_direction = str(get_keys_by_value(directions, direction.lower()))
+        index = target_direction.find(':')
+        dot_index = target_direction.find('.')
+        direction = target_direction[dot_index + 1:index]
+        target_direction = getattr(Action, direction)
+
+        if self.agent.currDirection != target_direction:
+            self.agent.currDirection = target_direction
+            self.move.insert(0, Action.SHOOT)
+            self.move.insert(0, target_direction)
+        else:
+            self.move.insert(0, Action.SHOOT)
 
     def handleWumpus(self, current_node):
         row = current_node.row
@@ -320,3 +281,5 @@ class AgentBrain():
         else:
             self.agent.moveFoward(self.state.state)
         return move_list
+def get_keys_by_value(dictionary, value):
+    return [key for key, val in dictionary.items() if val == value]
