@@ -20,34 +20,29 @@ class WumpusWorld:
             for line in lines:
                 tiles.append(line.split('.'))
             self.col = len(tiles[0])
-
             # Empty tiles map
-            for i in range(self.row):
-                tile_line = []
-                for j in range(self.col):
-                    tile_line.append(Tile())
-                self.listTiles.append(tile_line)
+            self.listTiles = [[Tile() for _ in range(self.col)] for _ in range(self.row)]
 
             # Tile's objects
             for i in range(self.row):
                 for j in range(self.col):
                     if 'A' in tiles[i][j]:
-                        (self.listTiles[i][j]).setPlayer()
+                        self.listTiles[i][j].setPlayer()
                         self.doorPos = (i, j)
                     if 'G' in tiles[i][j]:
-                        (self.listTiles[i][j]).setGold()
+                        self.listTiles[i][j].setGold()
                         self.numGold += 1
                     if 'P' in tiles[i][j]:
-                        (self.listTiles[i][j]).setPit()
+                        self.listTiles[i][j].setPit()
                         adj = self.getAdjacents(i, j)
                         for a in adj:
-                            (self.listTiles[a[0]][a[1]]).setBreeze()
+                            self.listTiles[a[0]][a[1]].setBreeze()
                     if 'W' in tiles[i][j]:
-                        (self.listTiles[i][j]).setWumpus()
+                        self.listTiles[i][j].setWumpus()
                         self.numWumpus += 1
                         adj = self.getAdjacents(i, j)
                         for a in adj:
-                            (self.listTiles[a[0]][a[1]]).setStench()
+                            self.listTiles[a[0]][a[1]].setStench()
 
 
     def getAdjacents(self, i, j):
