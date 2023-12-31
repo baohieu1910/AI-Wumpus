@@ -10,11 +10,13 @@ class Agent:
 
     # Check wall and move forward
     def moveFoward(self, state):
-        if self.currDirection == Action.UP and state[self.currPos].up != 'Wall':
-            self.currPos = state[self.currPos].up
-        elif self.currDirection == Action.LEFT and state[self.currPos].left != 'Wall':
-            self.currPos = state[self.currPos].left
-        elif self.currDirection == Action.DOWN and state[self.currPos].down != 'Wall':
-            self.currPos = state[self.currPos].down
-        elif self.currDirection == Action.RIGHT and state[self.currPos].right != 'Wall':
-            self.currPos = state[self.currPos].right
+        directions = {
+            Action.UP: 'up',
+            Action.LEFT: 'left',
+            Action.DOWN: 'down',
+            Action.RIGHT: 'right'
+        }
+
+        next_pos = getattr(state[self.currPos], directions[self.currDirection])
+        if next_pos != 'Wall':
+            self.currPos = next_pos
